@@ -1,0 +1,28 @@
+# emptyDir
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    name: pod-test
+  name: pod-test
+spec:
+  containers:
+    - name: pod-test1
+      image: xxx
+      volumeMounts:
+        - mountPath: /path1
+          name: cache-volume
+    #containers:
+    - name: pod-test2
+      image: yyy
+      volumeMounts:
+        - mountPath: /path2
+          name: cache-volume
+  volumes:
+    - name: cache-volume
+      emptyDir:
+        {}
+
+
+

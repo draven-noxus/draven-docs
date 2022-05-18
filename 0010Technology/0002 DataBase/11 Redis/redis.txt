@@ -1,0 +1,53 @@
+linux+redis实战教程视频
+
+视频：http://yun.itheima.com/course/233.html?1805lcqqun
+
+资料：http://pan.baidu.com/s/1nuMZerf        密码：md25
+
+
+
+redis（key-value数据库）
+
+资料：http://pan.baidu.com/s/1gfBqBIj   密码：beqm
+
+
+
+
+
+Redis视频教程
+
+视频http://yun.itheima.com/course/60.html?1806lcqqun
+
+资料：http://pan.baidu.com/s/1i5eCeeL 密码：lvpm
+
+
+
+NoSQL之Redis技术2016版
+
+http://pan.baidu.com/s/1eR1xBWI
+
+资料：http://pan.baidu.com/s/1dFLxBZ7 密码：tjr0
+
+
+
+
+
+Redis之高性能服务器存储应用(一)
+
+http://open.itcast.cn/c/11-364.html
+
+资料：http://pan.baidu.com/s/1jHCQaoe 密码：wbkr
+
+Redis之高性能服务器存储应用(二)
+
+https://pan.baidu.com/s/1dFLxWg5
+
+资料：http://pan.baidu.com/s/1jHCQaoe 密码：wbkr
+
+
+
+
+
+
+.Redis（缓存、消息队列）	
+https://pan.baidu.com/s/1yLJ-SlQPBT5CfuXKb3zo7A

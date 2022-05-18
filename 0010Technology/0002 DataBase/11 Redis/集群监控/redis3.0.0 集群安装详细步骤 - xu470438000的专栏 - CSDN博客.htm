@@ -1,0 +1,1330 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+    
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    
+<head>          
+            <link rel="canonical" href="http://blog.csdn.net/xu470438000/article/details/42971091"/> 
+
+   
+
+  
+ <meta http-equiv="Cache-Control" content="no-siteapp" /><link rel="alternate" media="handheld" href="#" />
+
+    <meta name="shenma-site-verification" content="5a59773ab8077d4a62bf469ab966a63b_1497598848"> 
+       
+    <title>redis3.0.0 集群安装详细步骤 - xu470438000的专栏
+        - CSDN博客</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="redis3.0.0 集群安装详细步骤，包含安装过程中遇到的所有问题。" />
+
+    <meta name="keywords" content="redis,gem,ruby" />
+
+   
+    <script src="http://static.blog.csdn.net/scripts/blog_static_head.min.js" type="text/javascript"></script>
+
+    
+        <!--new top-->
+       
+       
+        <!--new top-->
+    
+      <!-- ad begin -->
+         
+    <!-- ad end-->
+
+    <link rel="Stylesheet" type="text/css" href="http://static.blog.csdn.net/skin/dark1/css/style.css?v=1.1" />
+
+    
+
+    <link id="RSSLink" title="RSS" type="application/rss+xml" rel="alternate" href="/xu470438000/rss/list" />
+    <link rel="shortcut icon" href="http://c.csdnimg.cn/public/favicon.ico" />
+    <link type="text/css" rel="stylesheet" href="http://static.blog.csdn.net/scripts/SyntaxHighlighter/styles/default.css" />
+ 
+
+
+
+    <link href="http://c.csdnimg.cn/blog/csdn_public_blog_detail.min.css" type="text/css" rel="stylesheet" />
+     
+         <link rel="stylesheet" href="http://static.blog.csdn.net/css/csdn_blog_detail.min.css" />
+
+  
+
+
+    <!-- 请置于所有广告位代码之前 --> 
+            <script src="http://dup.baidustatic.com/js/ds.js"></script>
+
+</head>
+
+
+<body>  
+     
+        <div class="tracking-ad" data-view="true" data-mod="ad_popu_72"  data-mtp="62" data-order="40" data-con="ad_content_2072" >
+                     <script id="popuLayer_js_q" src="http://ads.csdn.net/js/popuLayer.js" defer="defer"  type="text/javascript"></script>
+                <div id="layerd" style="position: fixed;bottom:0px;right:0px;line-height:0px;z-index:1000">
+    	                <div class="J_close layer_close" style="display:;background-color:#efefef;padding:0px;color:#333;font:12px/24px Helvetica,Tahoma,Arial,sans-serif;text-align:right;">关闭</div><!-- 广告占位容器 -->
+                    <div id="cpro_u2895327">
+                        <!-- 投放代码 -->
+                        <script src="http://dup.baidustatic.com/js/ds.js"></script>
+                       <!-- 广告位：PC端-博客详情页右侧弹窗-300*250 -->
+                            <script>
+                                (function () {
+                                    var s = "_" + Math.random().toString(36).slice(2);
+                                    document.write('<div id="' + s + '"></div>');
+                                    (window.slotbydup = window.slotbydup || []).push({
+                                        id: '4740870',
+                                        container: s,
+                                        size: '300,250',
+                                        display: 'inlay-fix'
+                                    });
+                                })();
+                            </script>
+                    </div></div>
+                <script>  document.getElementById("popuLayer_js_q").onload = function () {
+      var styObjd = styObj = { width: "300px", "height": parseInt(250) + 28 };
+      window.CSDN.Layer.PopuLayer("#layerd", { storageName: "layerd", styleObj: styObjd, total: 50, expoire: 1000 * 60 });
+  }</script>
+            
+     
+        </div>
+
+    <!-- 广告位开始 -->
+        
+    <!-- 广告位结束 -->
+
+    
+   
+      <!--new top-->
+    <script id="toolbar-tpl-scriptId" fixed="true" prod="blog" skin="black" src="http://c.csdnimg.cn/public/common/toolbar/js/html.js" type="text/javascript"></script>
+     <!--new top-->
+    <div id="container">
+        <div id="header">
+    <div class="header">
+        <div id="blog_title">
+            <h2>
+                <a href="http://blog.csdn.net/xu470438000">xu470438000的专栏</a></h2>
+            <h3></h3>
+            <div class="clear">
+            </div>
+        </div>
+        <div class="clear">
+        </div>
+        
+     
+    </div>
+</div>
+<div id="navigator">
+    <div class="navigator_bg">
+    </div>
+    <div class="navigator">
+        <ul>           
+                <li id="btnContents"><a href="http://blog.csdn.net/xu470438000?viewmode=contents"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_mulu'])">
+                    <img src="http://static.blog.csdn.net/images/ico_list.gif">目录视图</span></a></li>
+                <li id="btnView"><a href="http://blog.csdn.net/xu470438000?viewmode=list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_zhaiyao'])">
+                    <img src="http://static.blog.csdn.net/images/ico_summary.gif">摘要视图</span></a></li>
+                <li id="btnRss"><a href="http://blog.csdn.net/xu470438000/rss/list"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_RSS'])">
+                    <img src="http://static.blog.csdn.net/images/ico_rss.gif">订阅</span></a></li>                
+            
+
+            </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    var username = "xu470438000";
+    var _blogger = username;
+    var blog_address = "http://blog.csdn.net/xu470438000";
+    var static_host = "http://static.blog.csdn.net";
+    var currentUserName = "";  
+</script>
+
+        <div id="body">
+            <div id="main">
+                <div class="main">
+                        <div class="ad_class">
+<div class="notice tracking-ad" data-mod='popu_3' > 
+
+
+<a href="http://blog.csdn.net/epubit17/article/details/78038722">
+<font color=red><strong>异步赠书：9月重磅新书升级，本本经典</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/blogdevteam/article/details/78105371">
+<font color=blue><strong></strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+<a href="http://blog.csdn.net/turingbooks/article/details/78017356">
+<font color=blue><strong>程序员9月书讯</strong></font></a>
+
+&nbsp;&nbsp;&nbsp;&nbsp
+
+
+<a href="http://blog.csdn.net/broadview2006/article/details/78018836">
+<font color=red><strong>每周荐书：ES6、虚拟现实、物联网（评论送书）</strong></font></a>
+
+
+
+</div>                        </div>
+
+                        
+
+
+
+  
+
+
+
+
+
+
+<script   type="text/javascript" src="http://static.blog.csdn.net/scripts/category.js"></script>
+
+  <script type="text/ecmascript">
+      window.quickReplyflag = true;
+      var isBole = false; 
+      var fasrc="http://my.csdn.net/my/favorite/miniadd?t=redis3.0.0+%e9%9b%86%e7%be%a4%e5%ae%89%e8%a3%85%e8%af%a6%e7%bb%86%e6%ad%a5%e9%aa%a4&u=http://blog.csdn.net/xu470438000/article/details/42971091"
+    </script>
+<div id="article_details" class="details">
+    <div class="article_title">   
+         <span class="ico ico_type_Original"></span>
+
+    <h1>
+        <span class="link_title"><a href="/xu470438000/article/details/42971091">
+        redis3.0.0 集群安装详细步骤        
+           
+        </a>
+        </span>
+
+         
+    </h1>
+</div>
+
+   
+
+        <div class="article_manage clearfix">
+        <div class="article_l">
+            <span class="link_categories">
+            标签：
+              <a href='http://www.csdn.net/tag/redis' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">redis</a><a href='http://www.csdn.net/tag/gem' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">gem</a><a href='http://www.csdn.net/tag/ruby' target=_blank onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_tag']);">ruby</a>
+            </span>
+        </div>
+        <div class="article_r">
+            <span class="link_postdate">2015-01-21 17:30</span>
+            <span class="link_view" title="阅读次数">102239人阅读</span>
+            <span class="link_comments" title="评论次数"> <a href="#comments" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_pinglun'])">评论</a>(81)</span>
+            <span class="link_collect tracking-ad" data-mod="popu_171"> <a href="javascript:void(0);" onclick="javascript:collectArticle('redis3.0.0+%e9%9b%86%e7%be%a4%e5%ae%89%e8%a3%85%e8%af%a6%e7%bb%86%e6%ad%a5%e9%aa%a4','42971091');return false;" title="收藏">收藏</a></span>
+             <span class="link_report"> <a href="#report" onclick="javascript:report(42971091,2);return false;" title="举报">举报</a></span>
+
+        </div>
+    </div>    <style type="text/css">        
+            .embody{
+                padding:10px 10px 10px;
+                margin:0 -20px;
+                border-bottom:solid 1px #ededed;                
+            }
+            .embody_b{
+                margin:0 ;
+                padding:10px 0;
+            }
+            .embody .embody_t,.embody .embody_c{
+                display: inline-block;
+                margin-right:10px;
+            }
+            .embody_t{
+                font-size: 12px;
+                color:#999;
+            }
+            .embody_c{
+                font-size: 12px;
+            }
+            .embody_c img,.embody_c em{
+                display: inline-block;
+                vertical-align: middle;               
+            }
+             .embody_c img{               
+                width:30px;
+                height:30px;
+            }
+            .embody_c em{
+                margin: 0 20px 0 10px;
+                color:#333;
+                font-style: normal;
+            }
+    </style>
+    <script  type="text/javascript">
+        $(function () {
+            try
+            {
+                var lib = eval("("+$("#lib").attr("value")+")");
+                var html = "";
+                if (lib.err == 0) {
+                    $.each(lib.data, function (i) {
+                        var obj = lib.data[i];
+                        //html += '<img src="' + obj.logo + '"/>' + obj.name + "&nbsp;&nbsp;";
+                        html += ' <a href="' + obj.url + '" target="_blank">';
+                        html += ' <img src="' + obj.logo + '">';
+                        html += ' <em><b>' + obj.name + '</b></em>';
+                        html += ' </a>';
+                    });
+                    if (html != "") {
+                        setTimeout(function () {
+                            $("#lib").html(html);                      
+                            $("#embody").show();
+                        }, 100);
+                    }
+                }      
+            } catch (err)
+            { }
+            
+        });
+    </script>
+      <div class="category clearfix">
+        <div class="category_l">
+           <img src="http://static.blog.csdn.net/images/category_icon.jpg">
+            <span>分类：</span>
+        </div>
+        <div class="category_r">
+                    <label  onclick="GetCategoryArticles('2850653','xu470438000','top','42971091');">
+                        <span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_fenlei']);">redis<em>（1）</em></span>
+                      <img class="arrow-down" src="http://static.blog.csdn.net/images/arrow_triangle _down.jpg" style="display:inline;">
+                      <img class="arrow-up" src="http://static.blog.csdn.net/images/arrow_triangle_up.jpg" style="display:none;">
+                        <div class="subItem">
+                            <div class="subItem_t"><a  href="http://blog.csdn.net/xu470438000/article/category/2850653"  target="_blank">作者同类文章</a><i class="J_close">X</i></div>
+                            <ul class="subItem_l" id="top_2850653">                            
+                            </ul>
+                        </div>
+                    </label>                    
+        </div>
+    </div>
+        <div   class="bog_copyright">         
+            <p  class="copyright_p" >版权声明：本文为博主原创文章，未经博主允许不得转载。</p>
+        </div>
+
+  
+
+  
+  
+     
+
+
+<div id="article_content" class="article_content tracking-ad" data-mod=popu_307  data-dsm = "post" >
+
+<p>Redis<span style="font-family:宋体">集群部署文档</span><span style="font-family:Times New Roman">(centos6</span><span style="font-family:宋体">系统</span><span style="font-family:Times New Roman">)</span></p>
+<p>（要让集群正常工作至少需要<span style="font-family:Times New Roman">3</span><span style="font-family:宋体">个主节点，在这里我们要创建</span><span style="font-family:Times New Roman">6</span><span style="font-family:宋体">个</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">节点，其中三个为主节点，三个为从节点，对应的</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">节点的</span><span style="font-family:Times New Roman">ip</span><span style="font-family:宋体">和端口对应关系如下）</span></p>
+<p>127.0.0.1:7000<br>
+127.0.0.1:7001</p>
+<p>127.0.0.1:7002</p>
+<p>127.0.0.1:7003</p>
+<p>127.0.0.1:7004</p>
+<p>127.0.0.1:7005</p>
+<p>&nbsp;</p>
+<p>1<span style="font-family:宋体">：下载</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">。官网下载</span><span style="font-family:Times New Roman">3.0.0</span><span style="font-family:宋体">版本，之前</span><span style="font-family:Times New Roman">2.</span><span style="font-family:宋体">几的版本不支持集群模式</span></p>
+<p>下载地址：<a target="_blank" target="_blank" href="https://github.com/antirez/redis/archive/3.0.0-rc2.tar.gz"><span style="color:rgb(0,0,255)">https://github.com/antirez/redis/archive/3.0.0-rc2.tar.gz</span></a></p>
+<p>2<span style="font-family:宋体">：上传服务器，解压，编译</span></p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>tar&nbsp;-zxvf&nbsp;redis-3.0.0-rc2.tar.gz&nbsp;</p>
+<p>mv&nbsp;redis-3.0.0-rc2.tar.gz&nbsp;redis3.0</p>
+<p>cd&nbsp;/usr/local/redis3.0</p>
+<p>make</p>
+<p>make&nbsp;install</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>3<span style="font-family:宋体">：创建集群需要的目录</span></p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>mkdir&nbsp;-p&nbsp;/usr.local/cluster</p>
+<p>cd&nbsp;/usr.local/cluster</p>
+<p>mkdir&nbsp;7000</p>
+<p>mkdir&nbsp;7001</p>
+<p>mkdir&nbsp;7002</p>
+<p>mkdir&nbsp;7003</p>
+<p>mkdir&nbsp;7004</p>
+<p>mkdir&nbsp;7005</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>4<span style="font-family:宋体">：修改配置文件</span><span style="font-family:Times New Roman">redis.conf</span></p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>cp&nbsp;/usr/local/redis3.0/redis.conf&nbsp;&nbsp;/usr.local/cluster</p>
+<p>vi&nbsp;redis.conf</p>
+<p>##<span style="font-family:宋体">修改配置文件中的下面选项</span></p>
+<p>port&nbsp;<span style="color:rgb(255,0,0)">7000</span></p>
+<p>daemonize&nbsp;yes</p>
+<p>cluster-enabled&nbsp;yes</p>
+<p>cluster-config-file&nbsp;nodes.conf</p>
+<p>cluster-node-timeout&nbsp;5000</p>
+<p>appendonly&nbsp;yes</p>
+<p>##<span style="font-family:宋体">修改完</span><span style="font-family:Times New Roman">redis.conf</span><span style="font-family:宋体">配置文件中的这些配置项之后把这个配置文件分别拷贝到</span><span style="font-family:Times New Roman">7000/7001/7002/7003/7004/7005</span><span style="font-family:宋体">目录下面</span></p>
+<p>cp&nbsp;/usr/local/cluster/redis.conf&nbsp;/usr/local/cluster/7000</p>
+<p>cp&nbsp;/usr/local/cluster/redis.conf&nbsp;/usr/local/cluster/7001</p>
+<p>cp&nbsp;/usr/local/cluster/redis.conf&nbsp;/usr/local/cluster/7002</p>
+<p>cp&nbsp;/usr/local/cluster/redis.conf&nbsp;/usr/local/cluster/7003</p>
+<p>cp&nbsp;/usr/local/cluster/redis.conf&nbsp;/usr/local/cluster/7004</p>
+<p>cp&nbsp;/usr/local/cluster/redis.conf&nbsp;/usr/local/cluster/7005</p>
+<p>&nbsp;</p>
+<p>##<span style="color:rgb(255,0,0)">注意：拷贝完成之后要修改<span style="font-family:Times New Roman">7001/7002/7003/7004/7005</span><span style="font-family:宋体">目录下面</span><span style="font-family:Times New Roman">redis.conf</span><span style="font-family:宋体">文件中的</span><span style="font-family:Times New Roman">port</span><span style="font-family:宋体">参数，分别改为对应的文件夹的名称</span></span></p>
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>5<span style="font-family:宋体">：分别启动这</span><span style="font-family:Times New Roman">6</span><span style="font-family:宋体">个</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">实例</span></p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>cd&nbsp;/usr/local/cluster/7000</p>
+<p>redis-server&nbsp;redis.conf</p>
+<p>cd&nbsp;/usr/local/cluster/7001</p>
+<p>redis-server&nbsp;redis.conf</p>
+<p>cd&nbsp;/usr/local/cluster/7002</p>
+<p>redis-server&nbsp;redis.conf</p>
+<p>cd&nbsp;/usr/local/cluster/7003</p>
+<p>redis-server&nbsp;redis.conf</p>
+<p>cd&nbsp;/usr/local/cluster/7004</p>
+<p>redis-server&nbsp;redis.conf</p>
+<p>cd&nbsp;/usr/local/cluster/7005</p>
+<p>redis-server&nbsp;redis.conf</p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>##<span style="font-family:宋体">启动之后使用命令查看</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">的启动情况</span><span style="font-family:Times New Roman">ps&nbsp;-ef|grep&nbsp;redis</span></p>
+<p>如下图显示则说明启动成功</p>
+<p>&nbsp;</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>6<span style="font-family:宋体">：执行</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">的创建集群命令创建集群</span></p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>cd&nbsp;/usr/local/redis3.0/src</p>
+<p>./redis-trib.rb&nbsp;&nbsp;create&nbsp;--replicas&nbsp;1&nbsp;127.0.0.1:7000&nbsp;127.0.0.1:7001&nbsp;127.0.0.1:7002&nbsp;127.0.0.1:7003&nbsp;127.0.0.1:7004&nbsp;127.0.0.1:7005</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>6.1<span style="font-family:宋体">执行上面的命令的时候会报错，因为是执行的</span><span style="font-family:Times New Roman">ruby</span><span style="font-family:宋体">的脚本，需要</span><span style="font-family:Times New Roman">ruby</span><span style="font-family:宋体">的环境</span></p>
+<p>错误内容：<span style="font-family:Times New Roman">/usr/bin/env:&nbsp;ruby:&nbsp;No&nbsp;such&nbsp;file&nbsp;or&nbsp;directory</span></p>
+<p>所以需要安装ruby<span style="font-family:宋体">的环境，这里推荐使用</span><span style="font-family:Times New Roman">yum&nbsp;install&nbsp;ruby</span><span style="font-family:宋体">安装</span></p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>yum&nbsp;install&nbsp;ruby</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&nbsp;</p>
+<p>6.2<span style="font-family:宋体">然后再执行第</span><span style="font-family:Times New Roman">6</span><span style="font-family:宋体">步的创建集群命令，还会报错，提示缺少</span><span style="font-family:Times New Roman">rubygems</span><span style="font-family:宋体">组件，使用</span><span style="font-family:Times New Roman">yum</span><span style="font-family:宋体">安装</span></p>
+<p>&nbsp;</p>
+<p>错误内容：</p>
+<p>./redis-trib.rb:24:in&nbsp;`require':&nbsp;no&nbsp;such&nbsp;file&nbsp;to&nbsp;load&nbsp;--&nbsp;rubygems&nbsp;(LoadError)</p>
+<p>from&nbsp;./redis-trib.rb:24</p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>yum&nbsp;install&nbsp;rubygems</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>6.3<span style="font-family:宋体">再次执行第</span><span style="font-family:Times New Roman">6</span><span style="font-family:宋体">步的命令，还会报错，提示不能加载</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">，是因为缺少</span><span style="font-family:Times New Roman">redis</span><span style="font-family:宋体">和</span><span style="font-family:Times New Roman">ruby</span><span style="font-family:宋体">的接口，使用</span><span style="font-family:Times New Roman">gem&nbsp;</span><span style="font-family:宋体">安装</span></p>
+<p>错误内容：</p>
+<p>/usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:31:in&nbsp;`gem_original_require':&nbsp;no&nbsp;such&nbsp;file&nbsp;to&nbsp;load&nbsp;--&nbsp;redis&nbsp;(LoadError)</p>
+<p>from&nbsp;/usr/lib/ruby/site_ruby/1.8/rubygems/custom_require.rb:31:in&nbsp;`require'</p>
+<p>from&nbsp;./redis-trib.rb:25</p>
+<p>&nbsp;</p>
+<p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>gem&nbsp;install&nbsp;&nbsp;redis --version 3.0.0</p>
+</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p>注意：gem install redis --version 3.0.0 失败的话，需要修改一下gem的源<br>
+gem sources --remove https://rubygems.org/<br>
+gem sources -a https://ruby.taobao.org/</p>
+<p>&nbsp;</p>
+<p>6.4&nbsp;<span style="font-family:宋体">再次执行第</span><span style="font-family:Times New Roman">6</span><span style="font-family:宋体">步的命令，正常执行</span></p>
+<p>&nbsp;<img src="http://img.blog.csdn.net/20150121173116437?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveHU0NzA0MzgwMDA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p>输入yes<span style="font-family:宋体">，然后配置完成。</span></p>
+<p>&nbsp;<img src="http://img.blog.csdn.net/20150121173132250?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveHU0NzA0MzgwMDA=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center" alt=""></p>
+<p>至此redis<span style="font-family:宋体">集群即搭建成功！</span></p>
+<p>7<span style="font-family:宋体">：使用</span><span style="font-family:Times New Roman">redis-cli</span><span style="font-family:宋体">命令进入集群环境</span></p>
+<p>
+<table>
+<tbody>
+<tr>
+<td valign="top">
+<p>redis-cli&nbsp;-c&nbsp;-p&nbsp;7000</p>
+</td>
+</tr>
+</tbody>
+</table>
+</p>
+<p><br>
+</p>
+<h1><strong><span style="color:#ff6666">如果有什么问题，可以进群一起交流！群号：555684318</span></strong></h1>
+<p>最近有很多朋友咨询大数据的一些东西，大数据初学者可以看一下，希望能对你们有所帮助吧<br>
+<a target="_blank" href="https://my.oschina.net/u/3667389/blog/1526524">https://my.oschina.net/u/3667389/blog/1526524</a><br>
+</p>
+   
+</div>
+
+
+
+
+<!-- Baidu Button BEGIN -->
+
+
+
+
+<div class="bdsharebuttonbox tracking-ad" style="float: right;" data-mod="popu_172">
+<a href="#" class="bds_more" data-cmd="more" style="background-position:0 0 !important; background-image: url(http://bdimg.share.baidu.com/static/api/img/share/icons_0_16.png?v=d754dcc0.png) !important"></a>
+<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"  style="background-position:0 -52px !important"></a>
+<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"style="background-position:0 -104px !important"></a>
+<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"style="background-position:0 -260px !important"></a>
+<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"style="background-position:0 -208px !important"></a>
+<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"style="background-position:0 -1612px !important" ></a>
+</div>
+<script>window._bd_share_config = { "common": { "bdSnsKey": {}, "bdText": "", "bdMini": "1", "bdMiniList": false, "bdPic": "", "bdStyle": "0", "bdSize": "16" }, "share": {} }; with (document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];</script>
+<!-- Baidu Button END -->
+
+   
+
+<!--172.16.140.12-->
+
+<!-- Baidu Button BEGIN -->
+<script type="text/javascript" id="bdshare_js" data="type=tools&amp;uid=1536434" ></script>
+<script type="text/javascript" id="bdshell_js"></script>
+<script type="text/javascript">
+    document.getElementById("bdshell_js").src = "http://bdimg.share.baidu.com/static/js/shell_v2.js?cdnversion=" + Math.ceil(new Date()/3600000)
+</script>
+<!-- Baidu Button END -->
+
+
+
+ 
+
+
+        <div id="digg" ArticleId="42971091" >
+            <dl id="btnDigg" class="digg digg_disable"  onclick="btndigga();">
+               
+                 <dt>顶</dt>
+                <dd>15</dd>
+            </dl>
+           
+              
+            <dl id="btnBury" class="digg digg_disable"  onclick="btnburya();">
+              
+                  <dt>踩</dt>
+                <dd>4</dd>               
+            </dl>
+            
+        </div>
+     <div class="tracking-ad" data-mod="popu_222"><a href="javascript:void(0);" >&nbsp;</a>   </div>
+    <div class="tracking-ad" data-mod="popu_223"> <a href="javascript:void(0);" >&nbsp;</a></div>
+    <script type="text/javascript">
+        function btndigga() {
+            $(".tracking-ad[data-mod='popu_222'] a").click();
+        }
+        function btnburya() {
+            $(".tracking-ad[data-mod='popu_223'] a").click();
+        }
+            </script>
+
+   <ul class="article_next_prev">
+                <li class="prev_article"><span  onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian']);location.href='http://blog.csdn.net/xu470438000/article/details/42391929';">上一篇</span><a href="http://blog.csdn.net/xu470438000/article/details/42391929" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_shangyipian'])">java爬虫抓取天猫商品的价格数据</a></li>
+                <li class="next_article"><span onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian']);location.href='http://blog.csdn.net/xu470438000/article/details/42972123';">下一篇</span><a href="http://blog.csdn.net/xu470438000/article/details/42972123" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_xiayipian'])">redis集群动态增加或者删除节点</a></li>
+    </ul>
+
+    <div style="clear:both; height:10px;"></div>
+
+
+            <div class="similar_article"   >
+                    <h4></h4>
+                    <div class="similar_c"style="margin:20px 0px 0px 0px">
+                        <div class="similar_c_t">
+                          &nbsp;&nbsp;相关文章推荐
+                        </div>
+                   
+                        <div class="similar_wrap tracking-ad" data-mod="popu_36"  style="max-height:250px">                       
+                            <ul class="similar_list fl">    
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yin767833376/article/details/53518272" title="Redis 4.0新功能介绍" strategy="BlogCommendFromBaidu_0" target="_blank">Redis 4.0新功能介绍</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/huiyiCourse/series_detail/64?utm_source=blog7" title="Presto的服务治理与架构在京东的实践与应用--王哲涵" strategy="undefined" target="_blank">Presto的服务治理与架构在京东的实践与应用--王哲涵</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yin767833376/article/details/52885015" title="Mysql字符串字段判断是否包含某个拼接字符串的2种方法" strategy="BlogCommendFromBaidu_1" target="_blank">Mysql字符串字段判断是否包含某个拼接字符串的2种方法</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/course/detail/6080?utm_source=blog7" title="深入掌握Kubernetes应用实践--王渊命" strategy="undefined" target="_blank">深入掌握Kubernetes应用实践--王渊命</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/qq_16216221/article/details/68925072" title="Redis大总结之四：任务队列 | 发布/订阅模式" strategy="BlogCommendFromBaidu_2" target="_blank">Redis大总结之四：任务队列 | 发布/订阅模式</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/course/detail/4199?utm_source=blog7" title="Python基础知识汇总" strategy="undefined" target="_blank">Python基础知识汇总</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/xiangzhihong8/article/details/53513759" title="Redis 4.0新功能介绍" strategy="BlogCommendFromBaidu_3" target="_blank">Redis 4.0新功能介绍</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/course/detail/3677?utm_source=blog7" title="Android核心技术详解" strategy="undefined" target="_blank">Android核心技术详解</a>
+                                   </li>
+                            </ul>
+                              <ul class="similar_list fr">      
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/javaloveiphone/article/details/52355180" title="分布式缓存技术redis学习系列（五）——spring-data-redis与JedisPool的区别、使用ShardedJedisPool与spring集成的实现及一致性哈希分析" strategy="BlogCommendFromBaidu_4" target="_blank">分布式缓存技术redis学习系列（五）——spring-data-redis与JedisPool的区别、使用ShardedJedisPool与spring集成的实现及一致性哈希分析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/course/detail/4100?utm_source=blog7" title="Retrofit 从入门封装到源码解析" strategy="undefined" target="_blank">Retrofit 从入门封装到源码解析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/isuker/article/details/51438586" title="Linux下的经典软件(史上最全)" strategy="BlogCommendFromBaidu_5" target="_blank">Linux下的经典软件(史上最全)</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://edu.csdn.net/course/detail/5226?utm_source=blog7" title="自然语言处理工具Word2Vec" strategy="undefined" target="_blank">自然语言处理工具Word2Vec</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yin767833376/article/details/60577195" title="MySQL数据库调优技巧" strategy="BlogCommendFromBaidu_6" target="_blank">MySQL数据库调优技巧</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/csdnnews/article/details/77995225" title="手机厂商们，不鸡贼能死？" strategy="BlogCommendFromBaidu_7" target="_blank">手机厂商们，不鸡贼能死？</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/yin767833376/article/details/62422089" title="MySQL数据库的高可用性分析" strategy="BlogCommendFromBaidu_8" target="_blank">MySQL数据库的高可用性分析</a>
+                                   </li>
+                                   <li>
+                                       <em>•</em>
+                                       <a href="http://blog.csdn.net/javaloveiphone/article/details/52327240" title="分布式缓存技术redis学习系列（三）——redis高级应用（主从、事务与锁、持久化）" strategy="BlogCommendFromBaidu_9" target="_blank">分布式缓存技术redis学习系列（三）——redis高级应用（主从、事务与锁、持久化）</a>
+                                   </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>   
+      
+</div>
+
+     <div>
+           
+
+       
+                           
+            <!-- 广告位：PC端-博客内容页-banner1-960*90 --> 
+           
+         <script type="text/javascript" src="http://mpb1.iteye.com/kfunnhoouimhnlou.js"></script>
+    </div>
+
+<div id="suggest"></div>
+         <script  language="javascript" type='text/javascript'>     
+             $(function(){
+                 $.get("/xu470438000/svc/GetSuggestContent/42971091",function(data){
+                     $("#suggest").html(data);
+                 });     
+             });             
+         </script>  
+
+
+
+            
+                                    
+            
+                                    
+
+        <!-- 广告位开始 -->
+        <!-- 广告位结束 -->
+
+
+<div class="comment_class">
+    <div id="comment_title" class="panel_head">
+        <span class="see_comment">查看评论</span><a name="comments"></a></div>
+    <div id="comment_list">
+    </div>
+    <div id="comment_bar">
+    </div>
+    <div id="comment_form">
+    </div>
+    <div class="announce">
+        * 以上用户言论只代表其个人观点，不代表CSDN网站的观点或立场<a name="reply"></a><a name="quote"></a></div>
+</div>
+
+<script type="text/javascript">
+    var fileName = '42971091';
+    var commentscount = 81;
+    var islock = false
+</script>
+
+    <div id="ad_bot">
+    </div>
+<div id="report_dialog">
+</div>
+
+<div id="d-top"  style="bottom:60px;">
+
+        <a id="quick-reply" class="btn btn-top q-reply" title="快速回复" style="display:none;">
+            <img src="http://static.blog.csdn.net/images/blog-icon-reply.png" alt="快速回复">
+        </a>    
+    <a id="d-top-a" class="btn btn-top backtop"  style="display: none;" title="返回顶部" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_huidaodingbu'])" style="">         
+         <img src="http://static.blog.csdn.net/images/top.png" alt="TOP">
+    </a>
+</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $("#ad_frm_0").height("90px");
+        
+        setTimeout(function(){
+            $("#ad_frm_2").height("200px");
+        },1000);    
+    });
+  
+</script>
+<style type="text/css">
+    .tag_list
+    {
+        background: none repeat scroll 0 0 #FFFFFF;
+        border: 1px solid #D7CBC1;
+        color: #000000;
+        font-size: 12px;
+        line-height: 20px;
+        list-style: none outside none;
+        margin: 10px 2% 0 1%;
+        padding: 1px;
+    }
+    .tag_list h5
+    {
+        background: none repeat scroll 0 0 #E0DBD3;
+        color: #47381C;
+        font-size: 12px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 5px;
+        margin: 0;
+    }
+    .tag_list h5 a
+    {
+        color: #47381C;
+    }
+    .classify
+    {
+        margin: 10px 0;
+        padding: 4px 12px 8px;
+    }
+    .classify a
+    {
+        margin-right: 20px;
+        white-space: nowrap;
+    }
+</style>
+
+
+
+
+
+<div id="pop_win" style="display:none ;position: absolute; z-index: 10000; border: 1px solid rgb(220, 220, 220); top: 222.5px; left: 630px; opacity: 1; background: none 0px 0px repeat scroll rgb(255, 255, 255);">
+    
+</div>
+<div id="popup_mask"></div>
+<style>
+    #popup_mask
+    {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 9999;
+        left: 0px;
+        top: 0px;
+        opacity: 0.3;
+        filter: alpha(opacity=30);
+        display: none;
+    }
+
+</style>
+
+
+
+
+<script type="text/javascript">
+    $(function(){        
+        
+        setTimeout(function(){
+            $(".comment_body:contains('回复')").each(function(index,item){
+                var u=$(this).text().split('：')[0].toString().replace("回复","")
+                var thisComment=$(this);
+                if(u)
+                {
+                    $.getJSON("https://passport.csdn.net/get/nick?callback=?", {users: u}, function(a) {
+                        if(a!=null&&a.data!=null&&a.data.length>0)
+                        {
+                            nick=a.data[0].n; 
+                            if(u!=nick)
+                            {
+                                thisComment.text(thisComment.text().replace(u,nick));  
+                            }
+                        }       
+                    });  
+                }
+            });         
+
+        },200);  
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },5000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },10000);
+
+        setTimeout(function(){
+            $(".math").each(function(index,value){$(this).find("span").last().css("color","#fff"); })
+        },15000);
+        
+        setTimeout(function(){
+            $("a img[src='http://js.tongji.linezing.com/stats.gif']").parent().css({"position":"absolute","left":"50%"});
+        },300);
+    });
+
+    function loginbox(){
+        var $logpop=$("#pop_win");
+        $logpop.html('<iframe src="https://passport.csdn.net/account/loginbox?service=http://static.blog.csdn.net/callback.htm" frameborder="0" height="600" width="400" scrolling="no"></iframe>');
+
+        $('#popup_mask').css({
+            opacity: 0.5,
+            width: $( document ).width() + 'px',
+            height:  $( document ).height() + 'px'
+        });
+        $('#popup_mask').css("display","block");
+ 
+        $logpop.css( {
+            top: ($( window ).height() - $logpop.height())/ 2  + $( window 
+       ).scrollTop() + 'px',
+            left:($( window ).width() - $logpop.width())/ 2
+        } );
+ 
+        setTimeout( function () {
+            $logpop.show();
+            $logpop.css( {
+                opacity: 1
+            } );
+        }, 200 );
+ 
+        $('#popup_mask').unbind("click");
+        $('#popup_mask').bind("click", function(){
+            $('#popup_mask').hide();
+            var $clopop = $("#pop_win");
+            $("#common_ask_div_sc").css("display","none");
+            $clopop.css( {
+                opacity: 0
+            } );
+            setTimeout( function () {
+                $clopop.hide();
+            }, 350 );
+            return false;
+        });
+    }   
+
+    var articletitle='redis3.0.0 集群安装详细步骤';
+
+</script>
+
+
+
+
+
+
+
+
+
+
+                        <div class="clear">
+                        </div>
+                    </div>                   
+                
+            </div>
+                   
+           <div id="side">
+               
+    <div class="side">
+<div id="panel_Profile" class="panel">
+<ul class="panel_head"><span>个人资料</span></ul>
+<ul class="panel_body profile">
+<div id="blog_userface">
+    <a href="http://my.csdn.net/xu470438000" target="_blank">
+    <img src="http://avatar.csdn.net/7/B/F/1_xu470438000.jpg" title="访问我的空间" style="max-width:90%"/>
+    </a>
+    <br />
+    <span><a href="http://my.csdn.net/xu470438000" class="user_name" target="_blank">xu470438000</a></span>
+</div>
+<div class="interact">
+
+    <a href="javascript:void(0);" class="attent" id="span_add_follow" title="[加关注]"></a>
+
+ <a href="javascript:void(0);" class="letter"  title="[发私信]" onclick="window.open('http://msg.csdn.net/letters/model?receiver=xu470438000','_blank','height=350,width=700');_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_sixin'])"></a>  
+</div>
+<div id="blog_medal">
+                <div id="bms_box">
+                                            <a  target="_blank">
+                                                    <img src="http://c.csdnimg.cn/jifen/images/xunzhang/xunzhang/chizhiyiheng.png" onmouseover="m_over_m(this,4)" onmouseout="m_out_m()" alt="1" >
+                                            </a>
+               </div>
+</div>
+<ul id="blog_rank">
+    <li>访问：<span>212624次</span></li>
+    <li>积分：<span>975</span> </li>    
+    <li >等级： <span style="position:relative;display:inline-block;z-index:1" >
+            <img src="http://c.csdnimg.cn/jifen/images/xunzhang/jianzhang/blog3.png" alt="" style="vertical-align: middle;" id="leveImg">
+            <div id="smallTittle" style=" position: absolute;  left: -24px;  top: 25px;  text-align: center;  width: 101px;  height: 32px;  background-color: #fff;  line-height: 32px;  border: 2px #DDDDDD solid;  box-shadow: 0px 2px 2px rgba (0,0,0,0.1);  display: none;   z-index: 999;">
+            <div style="left: 42%;  top: -8px;  position: absolute;  width: 0;  height: 0;  border-left: 10px solid transparent;  border-right: 10px solid transparent;  border-bottom: 8px solid #EAEAEA;"></div>
+            积分：975 </div>
+        </span>  </li>
+    <li>排名：<span>千里之外</span></li>
+</ul>
+<ul id="blog_statistics">
+    <li>原创：<span>21篇</span></li>
+    <li>转载：<span>0篇</span></li>
+    <li>译文：<span>0篇</span></li>
+    <li>评论：<span>102条</span></li>
+</ul>
+</ul>
+</div>
+
+
+<div class="panel" id="panel_Search">
+    <ul class="panel_head"><span>文章搜索</span></ul>
+    <ul class="panel_body" class="form_search">
+        <form id="frmSearch" action="http://so.csdn.net/search" class="form_search csdn-tracking-statistics" target="_blank"  data-mod="popu_306">
+        <span><input id="inputSearch" type="text" class="blogsearch" title="请输入关键字" /></span>
+        <input id="btnSubmit" type="button" value="搜索" title="search in blog" />
+        <input type="hidden" name="q" id="inputQ" />
+        <input type="hidden" name="t" value="blog" />
+        <a id="btnSearchBlog" target="_blank"></a>
+        </form>
+    </ul>
+</div>
+
+<script type="text/javascript">
+
+   
+    $(function () {
+        $("#btnSubmit").unbind("click");
+        $("#btnSubmit").click(function () {           
+            search();
+        });
+
+        $("#frmSearch").submit(function () {           
+            search();
+            return false;
+        });
+
+        function search()
+        {
+            if ($("#inputSearch").val() == "") {               
+                alert("请录入搜索关键词！");                         
+                return false;
+            }
+            //var url = "http://so.csdn.net/so/search/s.do?q=" + encodeURIComponent($("#inputSearch").val()) + "&u=" + username + "&t=blog";           
+            var url = "https://www.baidu.com/s?wd=" + encodeURIComponent($("#inputSearch").val()) + "%20site%3Ablog.csdn.net"
+            window.location.href = url;
+        }   
+    });
+</script><div id="panel_Category" class="panel">
+<ul class="panel_head"><span>文章分类</span></ul>
+<ul class="panel_body">    
+                 <li>
+                    <a href="/xu470438000/article/category/2806935" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">storm</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/xu470438000/article/category/2806933" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">java</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/xu470438000/article/category/2850653" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">redis</a><span>(2)</span>
+                </li>
+                 <li>
+                    <a href="/xu470438000/article/category/2908967" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">hbase</a><span>(0)</span>
+                </li>
+                 <li>
+                    <a href="/xu470438000/article/category/6067314" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">docker</a><span>(1)</span>
+                </li>
+                 <li>
+                    <a href="/xu470438000/article/category/6665627" onclick="_gaq.push(['_trackEvent','function', 'onclick', 'blog_articles_wenzhangfenlei']); ">es</a><span>(3)</span>
+                </li>
+</ul>
+</div><div id="panel_Archive" class="panel">
+<ul class="panel_head"><span>文章存档</span></ul>
+<ul class="panel_body">
+<div id="archive_list">
+<!--归档统计-->
+<li><a href="/xu470438000/article/month/2017/01">2017年01月</a><span>(5)</span></li><li><a href="/xu470438000/article/month/2016/01">2016年01月</a><span>(1)</span></li><li><a href="/xu470438000/article/month/2015/02">2015年02月</a><span>(1)</span></li><li><a href="/xu470438000/article/month/2015/01">2015年01月</a><span>(3)</span></li><li><a href="/xu470438000/article/month/2012/12">2012年12月</a><span>(5)</span></li><li><a href="/xu470438000/article/month/2012/11">2012年11月</a><span>(5)</span></li><li><a href="/xu470438000/article/month/2012/10">2012年10月</a><span>(1)</span></li>
+</div>
+</ul>
+</div>
+<div id="hotarticls" class="panel tracking-ad" data-mod="popu_340">
+<ul class="panel_head">
+    <span>       
+阅读排行    </span>
+</ul>
+
+<ul class="panel_body itemlist">
+<li>
+<a href="/xu470438000/article/details/42971091" title="redis3.0.0 集群安装详细步骤">redis3.0.0 集群安装详细步骤</a><span>(102233)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/50512442" title="使用docker搭建hadoop分布式集群">使用docker搭建hadoop分布式集群</a><span>(29280)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/42972123" title="redis集群动态增加或者删除节点">redis集群动态增加或者删除节点</a><span>(27813)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/42391929" title="java爬虫抓取天猫商品的价格数据">java爬虫抓取天猫商品的价格数据</a><span>(13953)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/43704469" title="Docker启动报错">Docker启动报错</a><span>(13066)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/54090429" title="storm1.0.2版本集群搭建完整步骤">storm1.0.2版本集群搭建完整步骤</a><span>(3676)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8290117" title="struts 2 和jquery整合 在前台从action中获取返回的值">struts 2 和jquery整合 在前台从action中获取返回的值</a><span>(3321)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/54090234" title="elasticsearch之marvel插件安装文档">elasticsearch之marvel插件安装文档</a><span>(2968)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8300101" title="JAVA中serialVersionUI的解释">JAVA中serialVersionUI的解释</a><span>(1529)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8171369" title="mysql和oracle据库对应的驱动类名和URL格式">mysql和oracle据库对应的驱动类名和URL格式</a><span>(1523)</span>
+</li>
+</ul>
+</div>
+<div id="hotarticls2" class="panel tracking-ad" data-mod="popu_341">
+<ul class="panel_head"><span>评论排行</span></ul>
+<ul class="panel_body itemlist">
+<li>
+<a href="/xu470438000/article/details/42971091" title="redis3.0.0 集群安装详细步骤">redis3.0.0 集群安装详细步骤</a><span>(81)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/50512442" title="使用docker搭建hadoop分布式集群">使用docker搭建hadoop分布式集群</a><span>(13)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/42391929" title="java爬虫抓取天猫商品的价格数据">java爬虫抓取天猫商品的价格数据</a><span>(6)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/42972123" title="redis集群动态增加或者删除节点">redis集群动态增加或者删除节点</a><span>(1)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/43704469" title="Docker启动报错">Docker启动报错</a><span>(1)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8290117" title="struts 2 和jquery整合 在前台从action中获取返回的值">struts 2 和jquery整合 在前台从action中获取返回的值</a><span>(0)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8248382" title="struts 1 配置文件详解（学的struts2，上班之后发现有的项目用的却是struts1）">struts 1 配置文件详解（学的struts2，上班之后发现有的项目用的却是struts1）</a><span>(0)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8220723" title="对spring框架的理解">对spring框架的理解</a><span>(0)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/54090461" title="大数据之storm视频更新记录【最近更新日期：2016-12-04】">大数据之storm视频更新记录【最近更新日期：2016-12-04】</a><span>(0)</span>
+</li>
+<li>
+<a href="/xu470438000/article/details/8171417" title="mysql中如何备份和还原数据库">mysql中如何备份和还原数据库</a><span>(0)</span>
+</li>
+</ul>
+</div>
+<div id="homepageArticles" class="panel tracking-ad" data-mod="popu_4">
+<ul class="panel_head"><span>推荐文章</span></ul>
+<ul class="panel_body" id="ad_commend">
+<ul>
+<li><a href="http://blog.csdn.net/blogdevteam/article/details/78105371" target="_blank">* CSDN新版博客feed流内测用户征集令</a></li>
+<li><a href="http://blog.csdn.net/lowprofile_coding/article/details/77852131" 
+target="_blank">* Android检查更新下载安装</a></li>
+<li><a href="http://blog.csdn.net/yhaolpz/article/details/77366154"target="_blank">* 动手打造史上最简单的 Recycleview 侧滑菜单</a></li>
+<li><a href="http://blog.csdn.net/sweettool/article/details/77018506" 
+target="_blank">* TCP网络通讯如何解决分包粘包问题</a></li>
+<li><a href="http://edu.csdn.net/huiyiCourse/series_detail/64" 
+target="_blank">* SDCC 2017之大数据技术实战线上峰会</a></li>
+<li><a href="http://blog.csdn.net/pangpang123654/article/details/78012706" 
+target="_blank">* 快速集成一个视频直播功能
+</a></li>
+
+</ul></ul>
+</div>
+
+
+<div id="newcomments" class="panel">
+<ul class="panel_head"><span>最新评论</span></ul>
+<ul class="panel_body itemlist">
+    <li>
+   
+         <a href="/xu470438000/article/details/42971091#comments">redis3.0.0 集群安装详细步骤</a>
+    <p style="margin:0px;"><a href="/loveanna7" class="user_name">loveanna7</a>:
+您好， 我按照上面的搭建成功了，但是，当我给redis增加密码是，就一直报错，集群不能加密码吗，如果...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42971091#comments">redis3.0.0 集群安装详细步骤</a>
+    <p style="margin:0px;"><a href="/loveanna7" class="user_name">loveanna7</a>:
+您好， 我按照上面的搭建成功了，但是，当我给redis增加密码是，就一直报错，集群不能加密码吗，如果...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42971091#comments">redis3.0.0 集群安装详细步骤</a>
+    <p style="margin:0px;"><a href="/xiaoxu2333" class="user_name">xiaoxu2333</a>:
+博主你好,我想请教一下,我的服务器是搭建在阿里云上面的,本地有两个IP,但是这两个IP只能在本地使用...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42971091#comments">redis3.0.0 集群安装详细步骤</a>
+    <p style="margin:0px;"><a href="/xiaoxu2333" class="user_name">xiaoxu2333</a>:
+博主你好,我想请教一下,我的服务器是搭建在阿里云上面的,本地有两个IP,但是这两个IP只能在本地使用...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42971091#comments">redis3.0.0 集群安装详细步骤</a>
+    <p style="margin:0px;"><a href="/xiaoxu2333" class="user_name">xiaoxu2333</a>:
+博主你好,我想请教一下,我的服务器是搭建在阿里云上面的,本地有两个IP,但是这两个IP只能在本地使用...
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/50512442#comments">使用docker搭建hadoop分布式集群</a>
+    <p style="margin:0px;"><a href="/zslinyuanwz0213" class="user_name">zslinyuanwz0213</a>:
+@ZHANG_H_A:同问   日志都正常就是不能访问 50070正常 8088不能访问
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42391929#comments">java爬虫抓取天猫商品的价格数据</a>
+    <p style="margin:0px;"><a href="/snowfield_june" class="user_name">snowfield_june</a>:
+楼主这个有问题的，我用jsoup按照你写的方法成功了
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42391929#comments">java爬虫抓取天猫商品的价格数据</a>
+    <p style="margin:0px;"><a href="/snowfield_june" class="user_name">snowfield_june</a>:
+楼主这个有问题，我用jsoup按照你的方法成功了
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42391929#comments">redis3.0.0 集群安装详细步骤</a>
+    <p style="margin:0px;"><a href="/hsliuyl" class="user_name">hsliuyl</a>:
+@dengrenchao:我也存在这个问题
+    </p>
+    </li>
+    <li>
+   
+         <a href="/xu470438000/article/details/42972123#comments">redis集群动态增加或者删除节点</a>
+    <p style="margin:0px;"><a href="/qq_32641763" class="user_name">qq_32641763</a>:
+最后一点，删除该节点需要改正下，一个是这样，ID 号代表改节点ID./redis-trib.rb d...
+    </p>
+    </li>
+</ul>
+</div>
+    </div>
+    <div class="clear">
+    </div>
+
+                   <div class="tracking-ad" data-view="true"  data-mtp="63" data-order="40" data-con="ad_content_1260" style="width: 200px; height: 400px;">
+                         <div id="nav_show_top_stop" style="width: 200px;height: 500px;z-index:1000">
+                             <div id="cpro_u2734128">
+                                  <!-- 投放代码 -->                           
+                              <!-- 请置于所有广告位代码之前 -->
+                                <script src="http://dup.baidustatic.com/js/ds.js"></script>
+                                 <!-- 广告位：PC端-博客详情页-左侧button1-200*200 -->
+                                    <script>
+                                        (function () {
+                                            var s = "_" + Math.random().toString(36).slice(2);
+                                            document.write('<div id="' + s + '"></div>');
+                                            (window.slotbydup = window.slotbydup || []).push({
+                                                id: '4740881',
+                                                container: s,
+                                                size: '200,200',
+                                                display: 'inlay-fix'
+                                            });
+                                        })();
+                                    </script>
+                             </div>
+                             <div id="cpro_u3031287">
+                                  <!-- 投放代码 -->
+                                <!-- 请置于所有广告位代码之前 -->
+                                    <script src="http://dup.baidustatic.com/js/ds.js"></script>
+
+                                 <!-- 广告位：PC端-博客详情页-左侧button2-200*200 -->
+                                <script>
+                                    (function () {
+                                        var s = "_" + Math.random().toString(36).slice(2);
+                                        document.write('<div id="' + s + '"></div>');
+                                        (window.slotbydup = window.slotbydup || []).push({
+                                            id: '4740894',
+                                            container: s,
+                                            size: '200,200',
+                                            display: 'inlay-fix'
+                                        });
+                                    })();
+                                </script>
+
+                             </div>
+
+                         </div>
+                   </div>
+                <script type="text/javascript">
+                    setTimeout(function () {
+                        var naviga_offsetTop = 0;
+                        function naviga_stay_top() { var scrollTop = jQuery(document).scrollTop(); if (scrollTop > naviga_offsetTop) { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": "0px" }); } else { jQuery("#nav_show_top_stop").css({ "position": "fixed" }); jQuery("#nav_show_top_stop").css({ "top": naviga_offsetTop - scrollTop + "px" }); } }
+                        function onload_function() { naviga_offsetTop = jQuery("#nav_show_top_stop").position().top; jQuery(window).bind("scroll", naviga_stay_top); jQuery(window).bind("mousewheel", naviga_stay_top); jQuery(document).bind("scroll", naviga_stay_top); jQuery(document).bind("mousewheel", naviga_stay_top); } jQuery(document).ready(onload_function);
+
+                    }, 200);
+                </script>                    
+
+           </div>   
+            <div class="clear">
+            </div>
+        </div>
+
+        
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="http://passport.csdn.net/content/loginbox/login.js"></script>
+<script type="text/javascript">
+    $(function () {
+        function __get_code_toolbar(snippet_id) {
+            return $("<span class='tracking-ad' data-mod='popu_167'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "' target='_blank' title='在CODE上查看代码片'  style='text-indent:0;'><img src='https://code.csdn.net/assets/CODE_ico.png' width=12 height=12 alt='在CODE上查看代码片' style='position:relative;top:1px;left:2px;'/></a></span>"
+                    + "<span class='tracking-ad' data-mod='popu_170'><a href='https://code.csdn.net/snippets/"
+                    + snippet_id
+                    + "/fork' target='_blank' title='派生到我的代码片' style='text-indent:0;'><img src='https://code.csdn.net/assets/ico_fork.svg' width=12 height=12 alt='派生到我的代码片' style='position:relative;top:2px;left:2px;'/></a></span>");
+        }
+        
+        $("[code_snippet_id]").each(function () {
+            __s_id = $(this).attr("code_snippet_id");
+            if (__s_id != null && __s_id != "" && __s_id != 0 && parseInt(__s_id) > 70020) {
+                __code_tool = __get_code_toolbar(__s_id);
+                $(this).prev().find(".tools").append(__code_tool);
+            }
+        });
+
+        $(".bar").show();
+    });
+</script>
+
+
+
+
+
+    </div>
+     
+
+
+       <script type="text/javascript" src="http://static.blog.csdn.net/public/res/bower-libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>   
+    
+    <script src="http://static.blog.csdn.net/scripts/csdn_blog_detail.min.js" type="text/javascript"></script>
+        
+    <script type="text/javascript" src="http://c.csdnimg.cn/blog/csdn_public_blog_detail.min.js?20170719001"></script>
+
+    <script type="text/javascript" src="http://medal.blog.csdn.net/showblogmedal.ashx?blogid=1354049"></script>
+
+
+  <div id="a52b5334d" style="width: 1px; height: 1px; display: none;">
+                    <script id="adJs52b5334"></script>
+                    <script>document.getElementById("adJs52b5334").src = "http://ads.csdn.net/js/opt/52b5334.js?t=" + Math.random();</script>
+   </div>
+          
+    <div class="pop_CA_cover"  style="display:none"></div>
+    <div class="pop pop_CA"  style="display:none">
+          <div class="CA_header">
+            收藏助手
+            <span class="cancel_icon"  id="fapancle"  onclick="$('.pop_CA').hide();$('.pop_CA_cover').hide();"></span>
+          </div>
+          <iframe src="" id="fa" frameborder="0" width="100%" height="360"  scrolling="no" ></iframe>
+    </div>
+
+
+        <script type="text/javascript">
+
+            $(function () {
+                var fromjs = $("#fromjs");
+                if (fromjs.length > 0) {
+                    $("#fromjs .markdown_views pre").addClass("prettyprint");
+                    prettyPrint();
+
+                    $('pre.prettyprint code').each(function () {
+                        var lines = $(this).text().split('\n').length;
+                        var $numbering = $('<ul/>').addClass('pre-numbering').hide();
+                        $(this).addClass('has-numbering').parent().append($numbering);
+                        for (i = 1; i <= lines; i++) {
+                            $numbering.append($('<li/>').text(i));
+                        };
+                        $numbering.fadeIn(1700);
+                    });
+
+                    $('.pre-numbering li').css("color", "#999");
+                }
+            });
+
+            $(".markdown_views a[target!='_blank']").attr("target", "_blank");
+
+            //$(".toc a[target='_blank']").attr("target", "");
+
+            setTimeout(function () {
+                $(".toc a[target='_blank']").attr("target", "");
+            }, 500);
+
+        </script>
+
+</body>
+</html>   

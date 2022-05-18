@@ -1,0 +1,201 @@
+说明： 分为两部分
+	安装 和 部署
+（*）文件       (**)目录
+
+1.部署
+	查看指令
+		rpm -qa
+		rpm -qa | grep （*）
+
+		rpm -qa | grep java
+	卸载指令
+		rpm -e --nodeps （*）
+
+		eg:rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.x86_64
+		   rpm -e --nodeps  mysql-libs-5.1.71-1.el6.x86_64
+	解压指令
+		
+
+ 		tar -xvf jdk-7u71-linux-i586.tar.gz -C /usr/local/java
+	
+	文件三种上传方式
+		一、Alt + P
+		二、图像化软件
+		三、插件
+			 yum -y install lrzsz  指令  rz
+	
+
+2.JDK的上传和安装以及环境变量配置
+ 	上传
+		查看系统JDK：java –version
+	删除
+		rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.x86_64
+	位置
+		/usr/local/(**)
+		eg:/usr/local/java
+	解压
+
+		yum install glibc.i686  安装jdk的依赖包（可选） yum表示在线安装
+		解压：tar -xvf jdk-7u71-linux-i586.tar.gz -C /usr/local/java
+	配置
+		打开文件进行环境配置
+		vi /etc/profile
+		输入
+		#set java environment
+		JAVA_HOME=/usr/local/java/（*）
+		JAVA_HOME=/usr/local/java/jdk1.7.0_71
+		CLASSPATH=.:$JAVA_HOME/lib.tools.jar
+		PATH=$JAVA_HOME/bin:$PATH
+		export JAVA_HOME CLASSPATH PATH
+	保存退出
+	使更改的配置立即生效（重新加载）
+		source /etc/profile 
+	
+	
+
+3.Mysql的上传和安装..
+	上传	
+	
+	检查是否存在
+		 rpm -qa | grep mysql  
+	卸载
+		rpm -e --nodeps  mysql-libs-5.1.71-1.el6.x86_64
+	解压	
+		tar -xvf MySQL-5.6.22-1.el6.i686.rpm-bundle.tar
+	依赖	
+		yum -y install libaio.so.1 libgcc_s.so.1 libstdc++.so.6 
+	是否需要升级
+		yum  update libstdc++-4.4.7-4.el6.x86_64
+	安装服务器
+		rpm -ivh MySQL-server-5.6.22-1.el6.i686.rpm
+		内含密码
+	安装客户端
+		rpm -ivh MySQL-client-server-5.6.22-1.el6.i686.rpm
+		两个
+	查看启动状态
+		service mysql status
+	启动
+		service mysql start
+	查看密码
+		Mysql -u root -p 回车	
+	找默认密码
+		见mysql server安装	
+		A RANDOM PASSWORD
+	登录以后
+	密码设置：
+	改密码：set password=password('root')
+
+	登录
+	加入系统服务
+		chkconfig --add mysql
+	开机自启动 
+		chkconfig mysql on
+	开启远程访问
+		
+	登录
+		mysql -uroot –proot
+	若：
+	远程访问权限不足
+	则：
+	设置远程访问密码
+		grant all privileges on *.* to 'root' @'%' identified by 'root';
+	刷新
+		flush privileges;
+	设置防火墙(3306)
+	添加到防火墙列表
+		/sbin/iptables -I INPUT -p tcp --dport 3306 -j ACCEPT
+	保存文件
+		/etc/rc.d/init.d/iptables save 
+	查看
+
+
+	两种生效方法：
+	    	如果需要关闭或开户防火墙：不用设置端口
+			1) 重启后生效 
+				开启： chkconfig iptables on 
+				关闭： chkconfig iptables off 
+
+			2) 即时生效，重启后失效 
+				开启： service iptables start 
+				关闭： service iptables stop
+4.Tomcat
+	创建
+	上传
+	解压
+		tar -xvf apache-tomcat-7.0.57.tar.gz
+	启动	
+		切换路径：	cd apache-tomcat-7.0.57/bin/
+		启动：  ./startup.sh 或者 sh startup.sh
+		bin
+	查看状态日志
+		tail -f ../logs/catalina.out
+	查看效果
+		 http://192.168.0.160:8080/	
+	防火墙打开8080端口
+		/sbin/iptables -I INPUT -p tcp --dport 8080 -j ACCEPT
+		/etc/rc.d/init.d/iptables save
+	查看是否启动
+	
+    项目部署：
+	web应用部署到linux
+			?useUnicode=true&amp;characterEncoding=UTF8 中文就不会乱码了
+		1、导入数据到mysql
+		2、把应用打成war包（前提：修改c3p0.xml中的密码）
+		3、拷贝应用到tomcat中
+		4、访问
+5.redis
+	安装环境
+		依赖： yum install gcc-c++
+	上传
+		
+	解压
+
+	编译redis
+		进入cd redis-3.0.7
+	执行make
+	
+	安装
+				路径
+		make PREFIX=/usr/local/redis install
+	copy文件
+		配置文件
+		cp redis.conf /usr/local/redis
+	前段开启
+		/usr/local/redis/bin/redis-server
+	停止前端
+		ctrl + c
+	后端模式
+		vim/usr/local/redis/redis.conf
+	启动时，配置文件
+		cd/usr/local/redis/
+		./bin/redis-server ./redis.conf
+	当前任务进行查找
+		ps aux | grep - i redis
+	连接客户端
+		redis-cli -h ip地址 -p端口
+
+
+		
+	设置防火墙
+		vim /etc/sysconfig/iptables
+		
+		service iptables restart
+
+
+
+	启动：
+	/usr/local/redis/bin
+
+	./redis-server ./redis.conf
+
+登录：
+[root@localhost bin]# ./redis-server ./redis.conf
+[root@localhost bin]# ./redis-cli
+	
+		
+		
+			
+	
+		
+	
+	

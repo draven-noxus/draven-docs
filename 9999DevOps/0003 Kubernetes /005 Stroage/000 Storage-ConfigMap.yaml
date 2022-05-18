@@ -1,0 +1,161 @@
+# 配置文件存储
+
+# 一.创建
+# 存储配置文件
+# 保存单个属性
+# 保存整个配置文件 或者 json二进制大对象
+
+# 创建方式
+# 1 使用目录
+#  test.properties
+#  nginx.conf
+#  语法
+# kubectl create configmap name --from-file=/path/
+
+
+# 2.使用文件
+#  nginx.conf
+# kubectl create configmap name --from-file=/path/*.conf
+
+
+
+# 3.字面创建
+# kubectl create configmap name --from-literal=special.keyx=valuex --from-literal=special.keyy=valuey
+
+# 4.编写文件创建
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: special-config
+  namespace: default
+data:
+  special.how: very
+  special.type: charm
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: env-config
+  namespace: default
+data:
+  log_level: info
+
+
+# 查看kubectl get configmap name -o yaml
+
+# 二.使用
+# 环境变量
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-map
+spec:
+  containers:
+    - name: config-map
+      command: ["/bin/bash","-c","env"]
+      env:
+        # 规定名称
+        - name: SPECIAL_LEVEL_KEY
+          # value值的来源
+          valueFrom:
+            # 标记引用哪个key
+            configMapKeyRef:
+              # 引用哪个configmap
+              name: special-config
+              # 引用哪个key值
+              key: special.how
+        - name: SPECIAL_TYPE_KEY
+          # value值的来源
+          valueFrom:
+            configMapKeyRef:
+              # 引用哪个configmap
+              name: special-config
+              # 引用哪个key值
+              key: special.type
+      # 第二种引用方式
+      envFrom:
+        - configMapRef:
+            name: env-config
+---
+# 命令行参数
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-map
+spec:
+  containers:
+    - name: config-map
+      command: ["/bin/bash","-c","echo $(SPECIAL_LEVEL_KEY) $(SPECIAL_TYPE_KEY)"]
+      env:
+        # 规定名称
+        - name: SPECIAL_LEVEL_KEY
+          # value值的来源
+          valueFrom:
+            # 标记引用哪个key
+            configMapKeyRef:
+              # 引用哪个configmap
+              name: special-config
+              # 引用哪个key值
+              key: special.how
+        - name: SPECIAL_TYPE_KEY
+          # value值的来源
+          valueFrom:
+            configMapKeyRef:
+              # 引用哪个configmap
+              name: special-config
+              # 引用哪个key值
+              key: special.type
+      # 第二种引用方式
+      envFrom:
+        - configMapRef:
+            name: env-config
+---
+# 数据卷插件
+apiVersion: v1
+kind: Pod
+metadata:
+  name: config-map
+spec:
+  containers:
+    - name: config-map
+      image: xxx
+      command: ["/bin/bash","-c","cat /etc/config/special.how"]
+      # 挂在
+      volumeMounts:
+        # 使用哪个volumes
+        - name: config-volume
+          # 指定挂在目录位置
+          mountPath: /etc/config
+  volumes:
+    # 规定数据卷名称
+    - name: config-volume
+      # 使用哪个configmap
+      configMap:
+        name: special-config
+
+# 三.热更新？
+# 准备数据
+# pod在启动时读取configmap之后不在获取
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: log-config
+  namespace: default
+data:
+  log_level: info
+
+# 编辑命令
+# kubectl edit configmap log-config
+
+# 1.ConfigMap挂在的Env不会同步更新
+# 2.COnfigMap挂载的Volume中的数据需要一段时间（10s）同步
+
+# 手动刷新 通过
+#
+
+
+
+

@@ -1,0 +1,25 @@
+说明：*数值
+set 	赋值
+get	取值
+getset	先显示替换之前再取值获得新值
+del	删除指定的key
+
+
+incr	数值增
+decr	数值减
+
+
+incrby key increment
+decrby key decrement
+	递增减
+以上四个
+若不能转化报错
+	(error) ERR value is not an integer or out of range
+若不存在全部相初始值为0 
+执行之后为
+前者：+-1
+后者：+-*
+
+append key value
+	存在即追加
+	否 创建新的 

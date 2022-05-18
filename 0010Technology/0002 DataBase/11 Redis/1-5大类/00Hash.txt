@@ -1,0 +1,21 @@
+hset key field value
+hget key field value
+
+hmset key field value [field value...]
+hmget key field value [field value...]
+
+
+hgetall key
+hexists key field 
+
+
+hkeys key
+hvals key
+
+hlen key
+hincrby key field increment
+
+hdel key field [fiel...]
+del key 
+
+

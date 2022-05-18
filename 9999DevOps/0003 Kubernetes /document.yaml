@@ -1,0 +1,312 @@
+# pod
+# 概念
+# Volume
+# Event
+# Endpoint  Pod的IP加上这里的容器端口 (containerPort)，组成了一个新的概念—Endpoint
+apiVersion: v1
+kind: Pod # 是一个Pod
+metadata:
+  name: myweb # Pod的名称
+  labels:
+    name: myweb # label标签
+spec: # 定义了容器组
+  containers:
+    - name: myweb # 容器名
+      image: kubeguide/tomcat-app:v1 # 使用镜像
+      ports:
+        - containerPort: 8080 # 容器端口
+      # 资源限制
+      resources:
+        requests:
+          memory: '64Mi'
+          cpu: '250m'
+        limits:
+          memory: '128Mi'
+          cpu: '500m'
+      # 资源限制
+      env: # 变量
+        - name: MYSQL_SERVER_HOST
+          value: 'mysql'
+        - name: MYSQL_SERVER_PORT
+          value: '3306'
+
+# Label
+# 一个键值对 可以定义人任意数量的Label
+# Label通常在资源对象定义时确定，也可以在对象创建后 动态添加或者删除
+# 可以被都建到各种资源对象上 Node Pod Service RC 等
+# 版本标签  "release":"stable"、"release":"canary"
+# 环境标签  "environment":"dev"、"environment":"qa"、"environment":"production"
+# 架构标签  "tier":"frontend"、"tier":"backend"、"tier":"middleware"
+# 分区标签  "partition":"customerA"、"partition":"customerB"
+# 质量管控标签 "track":"daily"、"track":"weekly"
+# 随后可以通过Label Selector 筛选某些Label的资源对象-实现了类似SQL的对象查询机制
+# 语法
+#  name=redis-slave
+#  env!=production
+#  name in(redis-master, redis-slave)
+#  name not in(php-frontend)
+
+---
+apiVersion: v1
+kind: ReplicationController  # 是一个RC
+metadata:
+  name: myweb # RC的名称
+  labels:
+    name: myweb # label标签
+spec:
+  replicas: 1 # 副本数
+  selector:
+    app: myweb # 标签选择
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: myweb
+spec:
+  selector: # 标签选择
+    app: myweb
+  ports:
+    - port: 8080
+
+
+# Replication Controller
+# Pod 期待的的副本数
+# 用于筛选目标Pod的Label Selector
+# 当Pod的副本数量小于预期数量时，用于创建新Pod的Pod模版-template
+---
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    tier: frontend
+  template:
+    metadata:
+      labels:
+        app: app-demo
+        tier: frontend
+    spec:
+      containers:
+        - name: tomcat-demo
+          image: tomcat
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GET_HOST_FROM
+              value: dns
+          ports:
+            - containerPort: 80
+# 定义一个PC并提交到Kubernetes集群中 Master上Controller Manager组件就得到通知
+# 定期巡检系统中当前存活的目标 Pod，并确保目标Pod实例的数量刚好等于此RC的期望值
+
+# 我们可以通过修改RC的副本数量，来实现Pod的 动态缩放(Scaling)
+#  kubectl scale rc redis-slave --replicas=3
+#  scaled
+
+# 删除或更改 -- Rolling Update
+# 删除RC并不会影响通过该RC已创建好的Pod
+# 为 了删除所有Pod，可以设置replicas的值为0，然后更新该RC
+# kubectl提供了stop和delete命令来一次性删除RC和RC控制的全部Pod。
+
+
+---
+#apiVersion: extensions/v1beta1
+#kind: ReplicaSet
+#metadata:
+#  name: frontend
+#spec:
+#  selector:
+#    matchLabels:
+#      tier: frontend
+#    matchExpressions:
+#      - {key: tier,operator: in, values: [frontend]}
+# 很少单独使用Replica Set，它主要被Deployment这 个更高层的资源对象所使用，
+#  从而形成一整套Pod创建、删除、更新的 编排机制。我们在使用Deployment时，
+#  无须关心它是如何创建和维护 Replica Set的，这一切都是自动发生的
+#  Replica Set与Deployment这两个重要的资源对象逐步替代了之前RC 的作用
+
+#  大多数情况下，我们通过定义一个RC实现Pod的创建及副本
+#  在RC里包括完整的完整的Pod定义模板
+#  RC通过Label Selector机制实现对Pod副本的自动控制
+
+# 通过改变RC里的Pod副本数量，可以实现Pod的扩容或所容
+# 通过改变RC里的Pod模板中的镜像版本 可以实现Pod的滚动升级
+
+
+
+
+---
+# Deployment相对于RC的一个最大升级是我们可以随时知道当前 Pod“部署”的进度。
+# 实际上由于一个Pod的创建、调度、绑定节点及在目 标Node上启动对应的容器这一完整过程需要一定的时间，所以我们期待 系统启动N个Pod副本的目标状态
+# 使用场景
+# 创建一个Deployment对西那个来生成对应的Replica Set 并完成副本的创建
+# 检查Depoyment的状态来看部署动作是否完成（副本的数量是否达到预期的值）
+# 更新Deployment以创建新的Pod（比如镜像升级）
+# 如果当前Deployment不稳定 则回滚到一个早先的Deployment版本
+# 暂停Deployment以便于一次行修改多个PodTemplateSpec的配置项，之后再祸福Deploment，进行新的发布
+# 扩展Deployment的状态 以此作为发布是否成功的指标
+# 清理不再需要的旧版本ReplicaSets
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+
+#---
+#apiVersion: v1
+#kind: ReplicaSet
+#metadata:
+#  name: nginx-repset
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: frontend
+    matchExpressions:
+      - { key: tier ,operator: In,  values:[frontend]}
+  template:
+    metadata:
+      labels:
+        app: app-demo
+        tier: frontend
+    spec:
+      containers:
+        - name: tomcat-demo
+          image: tomcat
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+
+# kubectl apply -f tomcat-deployment.yaml
+# deployment "tomcat-deploy" created
+# kubectl get deployments
+# name tomcat-deploy desired 1 current 1 up-to-date 1 available 1 age  4m
+# DESIRED Pod副本数量的期望值，记载Deployment里定义的Replica
+# Current 当前Replica的值 实际上是 Deployment创建的Replica Set里的Replica值 这个值不断增加 知道达到DeSired未知
+# UP-TO-DATE 最新版本的Pod的副本数量 用于知识在滚动升级过程中，有多少个Pod副本已经升级成功
+# AVAILABLE 当前集群中可用的Pod副本数量，集群中当前存活的Pod的数量
+
+# kubectl get cs
+# name desired current age
+
+---
+#  Horizontal Pod Autoscaler
+#  Pod横向自动扩容 HPA
+# 两种方式作为Pod负载的度量指标
+# CPUUtilizationPercentage
+# 是一个算数平均值 目标Pod所有副本自身的CPU利用率的平均值
+# 计算过程中使用到的Pod的CPU使用量通常是1min内的平均值
+# 通常通过查询Heapster监控子系统来得到这个值 --需要部署哦
+# Kubernetes Monitoring Architecture 后续取代了 Heapster
+# 应用程序自定义的度量指标 比如服务在每秒内的相应请求数（TPS QPS）
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+  namespace: default
+spec:
+  maxReplicas: 10
+  minReplicas: 1
+  scaleTargetRef:
+    kind: Deployment # 控制Deployment
+    name: php-apache
+  targetCPUUtilizationPercentage: 90 # CPUUtilizationPercentage 的值超过90%时会触发自动扩容行为
+
+    # HPA实现方式
+    # kubectrl create
+    # kubectl autoscale deployment php-apache --cpu-percent=90 --min=1 --max=10
+
+
+    # StatefulSet 有状态的
+    # stateful从本质上来说 可以看作时Deployment/RC的一个特殊变种
+    # 有状态集群特点
+    # 每个节点都有固定的身份ID 通过这个ID集群中的成员可以相互发现并通信
+    # 集群的 规模时比较固定的，集群规模不能随意变动
+    # 集群中的每个节点都是有状态的 通常会持久化数据到永久存储中
+    # 若磁盘孙欢 则集群里的某个阶段无法正常运行 集群功能受损
+
+    # StatefulSet特性
+    # StatefulSet里的每个Pod都有稳定 唯一的网络标识 可以用来发现集群内的其他成员
+    #  假设StatefulSet的名称为kafka  那么后续 kafka-0 kafka-1以此类推
+    # StatefulSet 控制的副本的启动顺序是手控的
+  #  操作第n个Pod时，前n-1个Pod已经是运行且准备好的状态
+  # StatefulSet里的Pod采用稳定的持久化存储卷
+  # 通过PV或PVC来实现，删除Pod时默认不会删除与StatefulSet相关的存储卷（为了保证数据的安全）
+
+
+#  以下是什么意思
+# StatefulSet除了要与PV卷捆绑使用以存储Pod的状态数据，还要与 Headless Service配合使用，
+# 即在每个StatefulSet定义中都要声明它属于 哪个Headless Service。
+# Headless Service与普通Service的关键区别在于， 它没有Cluster IP，
+# 如果解析Headless Service的DNS域名，则返回的是该 Service对应的全部Pod的Endpoint列表。
+# StatefulSet在Headless Service的 基础上又为StatefulSet控制的每个Pod实例都创建了一个DNS域名，这个 域名的格式为:
+
+
+# 比如一个3节点的Kafka的StatefulSet集群对应的Headless Service的名 称为kafka，
+# StatefulSet的名称为kafka，则StatefulSet里的3个Pod的DNS 名称分别为kafka-0.kafka、kafka-1.kafka、kafka-3.kafka，
+# 这些DNS名称 可以直接在集群的配置文件中固定下来
+
+---
+# Service
+# 定义了一个名为 tomcat-service的Service 他的服务端口为8080 拥有 tier-frontend 这个LAbel的所有Pod实例都属于它
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: tomcat-service
+spec:
+  ports:
+    - port: 8080
+  selector:
+    type: frontend
+
+
+# 解析spec.ports
+# targetPort 确定提供该服务的容器所暴露的端口 即具体业务进程在容器内的targetPort上提供TCP/IP接入
+# port属性则定义了Service的虚端口
+# 若pod中没有指定targetPort 则默认targetPort与port相同
+
+
+
+
+
+# 外部访问的两种法式
+# NodePort方式
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: tomcat-service
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30000
+  selector:
+    type: frontend
+# Load balancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: tomcat-service
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8080
+  selector:
+    type: frontend
+
+
+# ConfigMap
+ # docker
+  # 在运行时通过容器的环境变量来除阿迪参数
+  # 通过Docker Volme将容器外的配置文件映射到容器内部
+ # 但是需要集中式管理
+ # Kubernetes
+  # 把所有的配置项当作key-value字符串

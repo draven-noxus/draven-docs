@@ -1,0 +1,88 @@
+# PersistentVolume
+
+
+# 访问模式
+# accessModes
+#  ReadWriteOnce  - RWO
+#  ReadOnlyMany   - ROX
+#  ReadWriteMany  - RWX
+
+
+# 回收策略
+# 目前只有NFS HostPath支持回收策略
+# Retail
+# Recyle
+# Delete
+
+# 状态
+# Available
+# Bound
+# Released
+# Failed
+
+
+
+# 静态pv
+
+
+
+
+
+# 动态PV
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /tmp
+    server: ip
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  serviceName: "nginx"
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: xxx
+          ports:
+            - containerPort: 80
+              name: web
+          volumeMounts:
+            - mountPath: /data/
+              name: www
+
+  volumeClaimTemplates:
+    - metadata:
+        name: xxxx
+      spec:
+        accessModes: [""]
+        storageClassName: "nfs"
+        resources:
+          requests:
+            storage: 1Gi
+
+

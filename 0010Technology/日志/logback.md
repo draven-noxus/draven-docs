@@ -1,0 +1,11 @@
+# logback
+
+日志级别
+
+```
+ERROR(ERROR_INT, "ERROR"),
+WARN(WARN_INT, "WARN"), 
+INFO(INFO_INT, "INFO"), 
+DEBUG(DEBUG_INT, "DEBUG"), 
+TRACE(TRACE_INT, "TRACE");
+```

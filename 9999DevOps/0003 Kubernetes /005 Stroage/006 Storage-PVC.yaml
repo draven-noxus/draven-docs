@@ -1,0 +1,7 @@
+# PersistentVolumeClaim
+
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+

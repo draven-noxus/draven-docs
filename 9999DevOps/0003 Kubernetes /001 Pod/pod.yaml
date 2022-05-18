@@ -1,0 +1,121 @@
+# pod
+# 概念
+# Volume
+# Event
+# Endpoint  Pod的IP加上这里的容器端口 (containerPort)，组成了一个新的概念—Endpoint
+apiVersion: v1
+kind: Pod # 是一个Pod
+metadata:
+  name: myweb # Pod的名称
+  labels:
+    name: myweb # label标签
+spec: # 定义了容器组
+  containers:
+    - name: myweb # 容器名
+      image: kubeguide/tomcat-app:v1 # 使用镜像
+      ports:
+        - containerPort: 8080 # 容器端口
+      # 资源限制
+      resources:
+        requests:
+          memory: '64Mi'
+          cpu: '250m'
+        limits:
+          memory: '128Mi'
+          cpu: '500m'
+      # 资源限制
+      env: # 变量
+        - name: MYSQL_SERVER_HOST
+          value: 'mysql'
+        - name: MYSQL_SERVER_PORT
+          value: '3306'
+
+# 概念说明
+# Init Container
+# https://kubernetes: io/docs/concepts/workloads/pods/init-containers/:
+# 等待其他关联组件正确运行（例如数据库或某个后台服务）
+# 基于环境变量或配置模版生成配置文件
+# 从远程数据库获取本地所需配置，或者将自身注册到某个中央数据库中
+
+
+# Pod的升级和回滚
+---
+# 理论讲解-升级
+# 初始创建Deployment时，系统创建一个ReplicaSet 并安装配置创建了3个副本，以此新增然后将旧的缩减为2
+# maxUnavailable和maxSurge的默认值将从1、1更新为所需 副本数量的25%、25%。
+# https://kubernetes:io/zh/docs/tutorials/kubernetes-basics/update/update-intro/:
+# 策略
+# RollingUpdate
+# Recreate
+# 最佳实战相关
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: ngnix
+spec:
+  minReadySeconds: 5 # 等待设置的时间后才进行升级
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: ngnix
+    spec:
+      containers:
+        - name: ngnix
+          image: ngnix:1.7.9
+          ports:
+            - containerPort: 80
+  selector:
+    matchLabels:
+      app: ngnix
+
+    # 变量设置
+    # kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1
+    # deployment ngnix=deployment image update
+
+    # 直接修改方式
+    # kubectl edit deployment/ngnix-deployment
+    # deployment ngnix-deployment edited
+
+
+    # 查看更新过程
+    # kubectl rollout status deployment/ngnix-deployment
+
+    # 查看ReplicaSet最终状态
+    # kubectl get rs
+
+    # 理论讲解-回滚
+    # 历史部署记录
+    # kubectl rollout history deployment/{name}
+    # 回滚到上一个版本
+    # kubectl rollout undo deployment/{name}
+    # 回滚到指定版本
+    # kubectl rollout undo deployment/{name} --to-revision=2
+
+    # 理论讲解-暂停和恢复Deployment的部署完成复杂的修改
+    # kubectl   rollout pause deployment/{name}
+
+    # 进行一系列的修改操作 （但是并不触发新的部署操作）
+    # kubectl set image deployment/nginx-deployment nginx=nginx:1.9.1
+    # kubectl set resources deployment {name} -c=ngnix--limits=cpu=200,memory=512Mi
+
+    # 创建了新的ReplicaSet
+    # kubectl get rs
+
+
+    # 理论讲解-使用kubectl rolling-update升级
+
+    # Pod的扩缩容
+    # 利用Deployment/RC的Scale机制
+    # 手动更新
+    # kubectl scale deployment nginx-deployment --replicas 5
+    # kubectl scale deployment nginx-deployment --replicas=1
+    # 自动更新
+    #

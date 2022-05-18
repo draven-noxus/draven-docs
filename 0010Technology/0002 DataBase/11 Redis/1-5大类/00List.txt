@@ -1,0 +1,78 @@
+说明
+头部 与 尾部
+left	right
+4294967295
+
+链表两头	高效
+链表中间	低效
+
+添加 不存在则创建
+rpush key values []
+lpush key values []
+
+扩展 存在即插入
+lpushx 
+rpushx 
+
+查看
+lrange key start end
+两种查看方式
+负数：尾部开始 -1开始
+正数：头部开始	0开始
+
+两端弹出
+lpop	头部弹出 
+rpop	尾部弹出
+
+获取数量（长度）
+llen
+
+lrem key count value
+	count = 0 删除所有的值
+	count > 0 头部开始 删除几个 值
+	count < 0 尾部开始 删除几个 值
+
+
+
+lset　key index value
+	添加角标元素值
+
+linsert key before | after privot value
+	pivot 之前或之后 插入 元素
+
+	
+
+应用
+	rpoplpush resource desination res尾部弹出 des头部添加
+	火车票
+
+
+
+
+
+
+
+
+
+
+
+
+尾部
+rpush  先进先出
+列 row  rank
+
+头部	
+lpush 先进后出
+
+
+
+
+
+rpoplpush
+应用场景：
+	消息队列
+	抢票
+
+
+
+

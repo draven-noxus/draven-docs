@@ -1,0 +1,113 @@
+
+# 负载均衡器，用于接收传入或传出的HTTP / TCP连接 该规范描述了应公开的一组端口，要使用的协议类型，负载均衡器的SNI配置
+# 描述了负载均衡器的L4-L6属性。VirtualService 可以将绑定到网关，以控制到达特定主机或网关端口的流量的转发
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: my-gateway
+  namespace: some-config-namespace
+spec:
+  selector:
+    app: my-gateway-controller # 该网关将应用于带有标签的Pod上运行的代理app: my-gateway-controller
+  servers:
+    - port:
+        number: 80 # 暴露端口
+        name: http
+        protocol: HTTP
+      hosts:
+        - uk.bookinfo.com
+        - eu.bookinfo.com
+      tls:
+        httpsRedirect: true # sends 301 redirect for http requests
+    - port:
+        number: 443 # 暴露端口
+        name: https-443 # 暴露端口
+        protocol: HTTPS
+      hosts:
+        - uk.bookinfo.com
+        - eu.bookinfo.com
+      tls:
+        mode: SIMPLE # enables HTTPS on this port
+        serverCertificate: /etc/certs/servercert.pem
+        privateKey: /etc/certs/privatekey.pem
+    - port:
+        number: 9443 # 暴露端口
+        name: https-9443 # 暴露端口
+        protocol: HTTPS
+      hosts:
+        - "bookinfo-namespace/*.bookinfo.com"
+      tls:
+        mode: SIMPLE # enables HTTPS on this port
+        credentialName: bookinfo-secret # fetches certs from Kubernetes secret
+    - port:
+        number: 9080 # 暴露端口
+        name: http-wildcard
+        protocol: HTTP
+      hosts:
+        - "*"
+    - port:
+        number: 2379 # to expose internal service via external port 2379
+        name: mongo
+        protocol: MONGO
+      hosts:
+        - "*"
+
+
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: bookinfo-rule
+  namespace: bookinfo-namespace
+spec:
+  hosts:
+    - reviews.prod.svc.cluster.local
+    - uk.bookinfo.com
+    - eu.bookinfo.com
+  gateways:
+    - some-config-namespace/my-gateway
+    - mesh # applies to all the sidecars in the mesh
+  http:
+    - match:
+        - headers:
+            cookie:
+              exact: "user=dev-123"
+      route:
+        - destination:
+            port:
+              number: 7777
+            host: reviews.qa.svc.cluster.local
+    - match:
+        - uri:
+            prefix: /reviews/
+      route:
+        - destination:
+            port:
+              number: 9080 # can be omitted if it's the only port for reviews
+            host: reviews.prod.svc.cluster.local
+          weight: 80
+        - destination:
+            host: reviews.qa.svc.cluster.local
+          weight: 20
+
+
+
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: bookinfo-Mongo
+  namespace: bookinfo-namespace
+spec:
+  hosts:
+    - mongosvr.prod.svc.cluster.local # name of internal Mongo service
+  gateways:
+    - some-config-namespace/my-gateway # can omit the namespace if gateway is in same
+      namespace as virtual service.
+  tcp:
+    - match:
+        - port: 27017
+      route:
+        - destination:
+            host: mongo.prod.svc.cluster.local
+            port:
+              number: 5555

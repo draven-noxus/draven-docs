@@ -1,0 +1,10 @@
+聚合运算
+	unions intersections differences
+
+
+应用场景
+	投票
+	、、
+	聚合操作
+
+
