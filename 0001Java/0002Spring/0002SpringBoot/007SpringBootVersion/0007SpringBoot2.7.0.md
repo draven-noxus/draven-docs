@@ -1,5 +1,11 @@
 # SpringBoot2.7.0
 
+## 主要更新
+
+```html
+Podman Support
+```
+
 ## 文档
 
 ```shell
