@@ -23,13 +23,13 @@
 #### 备份机制
 
 	Leader-Follower
-
+	
 	工作机制：生产者总是向领导者副本写消息；而消费者总是从领导者副本读消息。至于追随
 者副本，它只做一件事：向领导者副本发送请求，请求领导者把最新生产的消息发给它，这样它能保持与领
 导者的同步
 
 	领导者副本（Leader Replica） 对外提供服务
-
+	
 	追随者副本（Follower Replica）不对外提供服务
 
 
@@ -44,7 +44,7 @@
 ## 持久化数据
 
 	使用消息日志（Log）来保存数据，一个日志就是磁盘上一个只能追加写（Append-only）消息的物理文件。
-
+	
 	因为只能追加写入，故避免了缓慢的随机I/O操作，改为性能较好的顺序I/O写操作，这也是实现Kafka高吞
 
 吐量特性的一个重要手段。不过如果你不停地向一个日志写入消息，最终也会耗尽所有的磁盘空间，因此
@@ -74,7 +74,7 @@ Kafka必然要定期地删除消息以回收磁盘。怎么删除呢？简单来
 ### Confluent Kafka
 
 	跨数据中心备份、Schema注册中心以及集群监控工具等
-
+	
 	优势在于集成了很多高级特性且由Kafka原班人马打造，质量上有保证；缺陷在于相关文档资料不全，普及率较低，没有太多可供参考的范例
 
 ### Cloudera/Hortonworks Kafka (CDH/HDP Kafka)
@@ -276,15 +276,15 @@ $ log.dirs=
 ![PartitionConsumer](/Users/draven/Documents/documents/java/projects/draven-docs/0010Technology/0001 MQ/0002 KafKa/images\PartitionConsumer.png)
 
 		直接由客户端使用kafka提供的协议向服务器发送RPC请求获取数据，服务器接收到客户端的RPC请求后，将数据构造成RPC响应，返回给客户端，客户端解析相应的RPC响应获取数据
-
+	
 		获取消息的FetchRequest 和 FetchResponse
-
+	
 		获取offset的OffsetRequest 和 OffsetResponse
-
+	
 		提交offset的OffsetCommitRequest 和 OffsetCommitResponse
-
+	
 		获取Metadata的Metadata Request 和 Metadata Response
-
+	
 		生产者的ProducerRequest 和 Producer Response
 
 ### 组消费
@@ -701,112 +701,6 @@ replication 4 > available brokers3 error
 ## ISR
 
 实现了可用性和一致性的动态平衡
-
-
-
-# 环境搭建
-
-
-
-## zookeeper
-
-参考文档 http://zookeeper.apacher.org/doc/r3.4.9/zookeeperStarted.html
-
-### Kafka
-
-
-
-
-
-
-
-## 传统部署
-
-# Docker
-
-## 低版本部署
-
-
-
-### zookeeper
-
-```shell
-FROM centos:6.6
-
-RUN yum -y install vim lsof wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel pwgen python-pip
-
-RUN mkdir /opt/java &&\
-   wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.tar.gz -P /opt/java
-
-RUN tar zxvf /opt/java/jdk-8u102-linux-x64.tar.gz -C /opt/java &&\
-   JAVA_HOME=/opt/java/jdk1.8.0_102 &&\
-   sed -i "/^PATH/i export JAVA_HOME=$JAVA_HOME" /root/.bash_profile &&\
-   sed -i "s%^PATH.*$%&:$JAVA_HOME/bin%g" /root/.bash_profile &&\
-   source /root/.bash_profile
-
-ENV ZOOKEEPER_VERSION "3.4.6"
-
-RUN mkdir /opt/zookeeper &&\
-   wget http://mirror.olnevhost.net/pub/apache/zookeeper/zookeeper-$ZOOKEEPER_VERSION/zookeeper-$ZOOKEEPER_VERSION.tar.gz -P /opt/zookeeper
-
-RUN tar zxvf /opt/zookeeper/zookeeper*.tar.gz -C /opt/zookeeper
-
-RUN echo "source /root/.bash_profile" > /opt/zookeeper/start.sh &&\
-   echo "cp /opt/zookeeper/zookeeper-"$ZOOKEEPER_VERSION"/conf/zoo_sample.cfg /opt/zookeeper/zookeeper-"$ZOOKEEPER_VERSION"/conf/zoo.cfg" >> /opt/zookeeper/start.sh &&\
-   echo "/opt/zookeeper/zookeeper-$"ZOOKEEPER_VERSION"/bin/zkServer.sh start-foreground" >> /opt/zookeeper/start.sh
-
-EXPOSE 2181
-
-ENTRYPOINT ["sh", "/opt/zookeeper/start.sh"]
-```
-
-### kafka
-
-```shell
-FROM centos:6.6
-
-ENV KAFKA_VERSION "0.8.2.2"
-
-RUN yum -y install vim lsof wget tar bzip2 unzip vim-enhanced passwd sudo yum-utils hostname net-tools rsync man git make automake cmake patch logrotate python-devel libpng-devel libjpeg-devel pwgen python-pip
-
-RUN mkdir /opt/java &&\
-	wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u102-b14/jdk-8u102-linux-x64.tar.gz -P /opt/java
-
-RUN mkdir /opt/kafka &&\
-	wget http://apache.fayea.com/kafka/$KAFKA_VERSION/kafka_2.11-$KAFKA_VERSION.tgz -P /opt/kafka
-
-RUN tar zxvf /opt/java/jdk-8u102-linux-x64.tar.gz -C /opt/java &&\
-	JAVA_HOME=/opt/java/jdk1.8.0_102 &&\
-	sed -i "/^PATH/i export JAVA_HOME=$JAVA_HOME" /root/.bash_profile &&\
-	sed -i "s%^PATH.*$%&:$JAVA_HOME/bin%g" /root/.bash_profile &&\
-	source /root/.bash_profile
-
-RUN tar zxvf /opt/kafka/kafka*.tgz -C /opt/kafka &&\
-	sed -i 's/num.partitions.*$/num.partitions=3/g' /opt/kafka/kafka_2.11-$KAFKA_VERSION/config/server.properties
-
-RUN echo "source /root/.bash_profile" > /opt/kafka/start.sh &&\
-	echo "cd /opt/kafka/kafka_2.11-"$KAFKA_VERSION >> /opt/kafka/start.sh &&\
-	echo "sed -i 's%zookeeper.connect=.*$%zookeeper.connect=zookeeper:2181%g'  /opt/kafka/kafka_2.11-"$KAFKA_VERSION"/config/server.properties" >> /opt/kafka/start.sh &&\
-	echo "bin/kafka-server-start.sh config/server.properties" >> /opt/kafka/start.sh &&\
-	chmod a+x /opt/kafka/start.sh
-
-EXPOSE 9092
-
-ENTRYPOINT ["sh", "/opt/kafka/start.sh"]
-```
-
-```shell
-docker run -itd --name zookeeper -h zookeeper -p 2181:2181 imagesName
-
-docker run -idt --name kafka -h kafka -p9092:9092 --link zookeeper imagesName
-
-lsof -i:port
-
-
-# 测试语句
-
-# 数据同步 outputtopic
-```
 
 
 
