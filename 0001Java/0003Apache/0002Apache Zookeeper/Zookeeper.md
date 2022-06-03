@@ -64,13 +64,15 @@ java.lang.NoClassDefFoundError: org/apache/curator/framework/CuratorFrameworkFac
 
 
 
-
+# Console
 
 ## ZkUI
 
-https://github.com/DeemOpen/zkui
+
 
 ```shell
+# 下载
+https://github.com/DeemOpen/zkui
 # 打包
 mvn clean install -U
 # 复制配置文件(此配置文件包含登录时所需要的账户密码)
@@ -81,5 +83,17 @@ nohup java -jar zkui-2.0-SNAPSHOT-jar-with-dependencies.jar &
 # 页面访问（默认 用户 admin  密码 manager）
 http://ip:port
 # 根据界面查看 新增 或 修改信息
+```
+
+## prettyZoo
+
+```shell
+# https://github.com/vran-dev/PrettyZoo
+
+# https://github.com/vran-dev/PrettyZoo/releases/download/v1.9.7/prettyzoo-1.9.7-1.x86_64.rpm
+
+# https://github.com/vran-dev/PrettyZoo/releases/download/v1.9.7/prettyZoo-mac.dmg
+
+# 直接运行即可
 ```
 
