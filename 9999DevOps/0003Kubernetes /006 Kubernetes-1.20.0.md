@@ -44,7 +44,7 @@ k8s.gcr.io/coredns:1.6.7
 # 安装初始化 
 # calico  10.96.0.0/12
 # flannel 10.244.0.0/16
-kubeadm init --kubernetes-version=1.18.0 --pod-network-cidr=10.244.0.0/16
+kubeadm init --kubernetes-version=1.20.0 --pod-network-cidr=10.244.0.0/16
 
 # master参与调度
 kubectl taint nodes --all node-role.kubernetes.io/master-
@@ -123,10 +123,10 @@ yum list installed | grep kube
 yum remove kubeadm.x86_64 kubectl.x86_64 kubelet.x86_64 -y
 
 # 安装指定的kubeadm
-yum install -y kubelet-1.18.0 kubeadm-1.18.0 kubectl-1.18.0 kubernetes-cni
+yum install -y kubelet-1.20.0 kubeadm-1.20.0 kubectl-1.20.0 kubernetes-cni
 
 # 初始化
-kubeadm init  --kubernetes-version=1.18.0  --pod-network-cidr=10.8.0.0/16
+kubeadm init  --kubernetes-version=1.20.0  --pod-network-cidr=10.8.0.0/16
 
 
 ```
@@ -142,13 +142,13 @@ kubeadm init  --kubernetes-version=1.18.0  --pod-network-cidr=10.8.0.0/16
 #!/bin/bash
 # 下面的镜像应该去除"k8s.gcr.io/"的前缀，版本换成kubeadm config images list命令获取到的版本
 images=(
-    kube-apiserver:v1.18.16
-    kube-controller-manager:v1.18.16
-    kube-scheduler:v1.18.16
-    kube-proxy:v1.18.16
+    kube-apiserver:v1.20.15
+    kube-controller-manager:v1.20.15
+    kube-scheduler:v1.20.15
+    kube-proxy:v1.20.15
     pause:3.2
-    etcd:3.4.3-0
-    coredns:1.6.7
+    etcd:3.4.13-0
+    coredns:1.7.0
 )
 
 for imageName in ${images[@]} ; do
@@ -159,8 +159,8 @@ done
 
 
 
-docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.18.16
-docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.18.0 k8s.gcr.io/kube-proxy:v1.18.0
+docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.20.15
+docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy:v1.20.15 k8s.gcr.io/kube-proxy:v1.20.15
 
 
 # kubernetes-dashboard
