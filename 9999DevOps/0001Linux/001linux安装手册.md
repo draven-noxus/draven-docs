@@ -1,22 +1,13 @@
 # JDK安装
 
-## 查看版本
-
 ```shell
+# 查看版本
 java -version
-```
-
-## 获取jdk
-
-免密下载
-
-```shell
+# 获取jdk 
+# 免密下载
 wget --no-check-certificate --no-cookies --header "Cookie: oraclelicense=accept-securebackup-cookie" https://download.oracle.com/otn-pub/java/jdk/8u231-b11/5b13a193868b4bf28bcb45c792fce896/jdk-8u231-linux-x64.tar.gz
-```
 
-## 卸载JDK
-
-```shell
+# 卸载JDK
 java -version
 # 列出安装包rpm package
 rpm -e --nodeps 	
@@ -29,15 +20,9 @@ rpm -qa | grep java
 
 rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.x86_64
 rpm -e --nodeps java-1.6.0-openjdk-1.6.0.0-1.66.1.13.0.el6.x86_64
-```
 
-
-
-## 安装JDK
-
-### 软连接安装
-
-```shell
+# 安装JDK
+# 软连接安装
 # 创建文件夹
 
 mkdir /usr/local/java
@@ -54,36 +39,29 @@ vi /etc/profile
 export JAVA_HOME=/usr/local/java/current_version
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 export PATH=$JAVA_HOME/bin:$PATH
-```
 
-### rpm安装
+# 生效
+source /etc/profile 
 
-```powershell
+# rpm 安装
 rpm -ivh jdk-8u172-linux-x64.rpm 
-```
 
-配置环境变量
-
-```shell
+# 配置环境变量
 JAVA_HOME=/usr/java/jdk1.8.0_121
 PATH=$JAVA_HOME/bin:$PATH
 CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 export JAVA_HOME
 export PATH
 export CLASSPATH
-```
 
-配置生效
-
-```shell
+# 配置生效 
 source /etc/profile
-```
-
-确认环境变量
-
-```shell
+# 确认环境变量
+java -version
 echo $JAVA_HOME
 ```
+
+
 
 # Maven 安装
 
@@ -133,7 +111,7 @@ rpm -ivh MySQL-client-server-5.6.22-1.el6.i686.rpm
 # 查询mysq服务运行状态
 service mysql status
 # 服务未启动。
-# MySQL is not running 
+MySQL is not running 
 # 启动mysql服务
 service mysql start
 # 再次查看
@@ -150,8 +128,10 @@ cat .mysql_secret
 
 $ pKfZiUWKbTKWAME1
 
-# 使用密码登录mysql账号：mysql -uroot -p
-修改root密码：SET PASSWORD = PASSWORD('root');
+# 使用密码登录mysql账号
+mysql -uroot -p
+# 修改root密码
+SET PASSWORD = PASSWORD('root');
 
 # 开机自动启动
 # 系统启动时自动启动mysql服务
@@ -173,8 +153,10 @@ flush privileges;
 
 #（建议）防火墙打开3306端口
 /sbin/iptables -I INPUT -p tcp --dport 3306 -j ACCEPT  添加到防火墙列表
-/etc/rc.d/init.d/iptables save   保存一下 
-/etc/init.d/iptables status   查看防火墙列表
+# 保存一下 
+/etc/rc.d/init.d/iptables save   
+# 查看防火墙列表
+/etc/init.d/iptables status   
 
 # 如果需要关闭或开户防火墙：不用设置端口
 # 1) 重启后生效 
@@ -364,4 +346,151 @@ ssh -i ./id_rsa root@192.168.100.39
     -h|-?: 显示帮助
 
 ```
+
+# redis
+
+```shell
+# 安装环境
+# 依赖
+yum install gcc-c++
+# 上传 解压
+# 编译redis
+# 进入cd 
+	redis-3.0.7
+# 执行
+	make
+# 安装 路径
+	make PREFIX=/usr/local/redis install
+# copy文件
+	配置文件
+	cp redis.conf /usr/local/redis
+# 后台开启
+	/usr/local/redis/bin/redis-server
+# 停止前端
+	ctrl + c
+# 后端模式
+	vim/usr/local/redis/redis.conf
+# 启动时，配置文件
+	cd/usr/local/redis/
+	./bin/redis-server ./redis.conf
+# 当前任务进行查找
+	ps aux | grep - i redis
+# 连接客户端
+	redis-cli -h ip地址 -p端口
+
+# 启动
+/usr/local/redis/bin
+./redis-server ./redis.conf
+
+# 登录
+ ./redis-cli
+```
+
+# Docker 安装
+
+```shell
+# 删除旧的 docker 
+yum remove docker  docker-client  docker-client-latest  docker-common  docker-latest  docker-latest-logrotate  docker-logrotate  docker-selinux  docker-engine-selinux  docker-engine docker-ce -y
+
+# 删除旧的 docker 文件
+rm -rf /var/lib/docker
+
+# 安装所需的依赖包
+yum install -y yum-utils device-mapper-persistent-data lvm2
+
+# 安装仓库地址
+yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# 改用阿里源
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+
+# 查看仓库内可选的版本包
+yum list docker-ce --showduplicates | sort -r
+
+# 选择其中一个安装
+yum install docker-ce-18.06.1.ce -y
+
+# 启动 docker，并设置开机自启
+systemctl start docker
+systemctl enable docker
+```
+
+
+
+# Docker-Compose 安装
+
+```shell
+# 官网<翻墙速度慢>
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+# 国内源安装
+pip -V # 检查有没有 python-pip 包
+
+# 没有则安装
+yum -y install epel-release 
+yum -y install python-pip
+pip install --upgrade pip
+
+# 安装 docker-compose
+pip install docker-compose
+docker-compose -version
+```
+
+
+
+## SSH 登录<拒绝密码>
+
+```shell
+# 将本机的 id_rsa.pub 复制到服务器中 ~/.ssh/authorized_keys
+vim ~/.ssh/authorized_keys
+
+# 更改权限
+chown -R 700 ~/.ssh # 在本机也执行一次该命令
+chown -R 644 ~/.ssh/authorized_keys
+
+# 修改配置
+vim /etc/ssh/sshd_config
+
+# 允许密钥认证,此三项在原配置中被注释，可以直接添加到文件末尾
+RSAAuthentication yes
+PubkeyAuthentication yes
+StrictModes no
+# 公钥保存文件
+AuthorizedKeysFile .ssh/authorized_keys # 文件默认
+# 拒绝密码登录
+PasswordAuthentication no # 源文件中最后一行，默认为 yes
+
+# 重启服务
+systemctl restart sshd.service
+
+# 此时可以 ssh 登录
+sudo ssh -i id_rsa root@xxx # mac 示例，将本机的 id_rsa 复制到 / 路径下就好
+```
+
+## 修改 hostname
+
+```shell
+# 通过 hostnamectl 修改主机名、静态、瞬态、灵活主机名
+hostnamectl set-hostname xxx
+hostnamectl --pretty
+hostnamectl --static
+hostnamectl --transient
+
+# 手动修改 host 主机解析
+vim /etc/hosts
+# 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+127.0.0.1  xxx
+# ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+::1        xxx
+
+# 重启 or 退出连接
+reboot
+hostnamectl # 查看主机信息
+```
+
+
 

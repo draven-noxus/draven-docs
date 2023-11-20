@@ -11,6 +11,19 @@ Enter new UNIX password: #--- > 设置root 密码
 Retype new UNIX password: #--> 重复
 ```
 
+## rpm
+
+``` shell
+# 查看
+rpm -qa
+rpm -qa | grep java
+# 卸载指令
+	rpm -e --nodeps （*）
+# 例如
+rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-2.4.3.3.el6.x86_64
+rpm -e --nodeps  mysql-libs-5.1.71-1.el6.x86_64
+```
+
 
 
 ## CentOS6
@@ -206,16 +219,6 @@ sudo ssh -i id_rsa root@xxx # mac 示例，将本机的 id_rsa 复制到 / 路�
 
 
 
-## 软件安装
-
-### JDK	
-
-```shell
-rpm -qa|grep jdk
-rpm -e –nodeps java-1.4.2-gcj-compat-1.4.2.0-40jpp.115
-tar -zxvf jdk-8u201-linux-x64.tar.gz -C /var/jenkins_home/
-```
-
 ## 问题
 
 虚拟机是必不可少的
@@ -268,6 +271,8 @@ ping 192.168.0.1ifconfig
 #### 上传
 
 ```
+Alt + P
+图像化软件
 yum -y install lrzsz 打开窗口:rz 上传:rz
 ```
 
