@@ -1,6 +1,474 @@
-# linux
+# 介绍
 
-完全在CentOS7进行操作的，基本的编辑修改等操作就不提了
+Unix操作系统
+
+```shell
+redhat 
+
+	Centos RHEL
+
+ubuntu
+
+Suse
+```
+
+## 目录结构
+
+```
+/bin (/usr/bin 、 /usr/local/bin)
+是Binary的缩写, 这个目录存放着最经常使用的命令
+
+/sbin (/usr/sbin 、 /usr/local/sbin)
+s就是Super User的意思，这里存放的是系统管理员使用的系统管理程序
+
+/home
+存放普通用户的主目录，在Linux中每个用户都有一个自己的目录，一般该目录名是以用户的账号命名的
+
+/root
+该目录为系统管理员，也称作超级权限者的用户主目录
+
+/lib
+系统开机所需要最基本的动态连接共享库，其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库
+
+/lost+found
+这个目录一般情况下是空的，当系统非法关机后，这里就存放了一些文件
+
+/etc
+所有的系统管理所需要的配置文件和子目录
+
+/usr
+这是一个非常重要的目录，用户的很多应用程序和文件都放在这个目录下，类似与windows下的program files目录。
+
+/boot
+这里存放的是启动Linux时使用的一些核心文件，包括一些连接文件以及镜像文件，自己的安装别放这里
+
+/proc
+这个目录是一个虚拟的目录，它是系统内存的映射，我们可以通过直接访问这个目录来获取系统信息
+
+/srv
+service缩写，该目录存放一些服务启动之后需要提取的数据
+
+/sys
+这是linux2.6内核的一个很大的变化,该目录下安装了2.6内核中新出现的一个文件系统 sysfs
+
+/tmp
+这个目录是用来存放一些临时文件的
+
+/dev
+类似于windows的设备管理器，把所有的硬件用文件的形式存储。
+
+/media(centos6)
+linux系统会自动识别一些设备，例如U盘、光驱等等，当识别后，linux会把识别的设备挂载到这个目录下。
+
+/run
+进程产生的临时文件，虚拟机加载光盘映像在/run/media/root/ 目录下 
+
+/mnt
+系统提供该目录是为了让用户临时挂载别的文件系统的，我们可以将外部的存储挂载在/mnt/上，然后进入该目录就可以查看里的内容了
+
+/opt
+这是给主机额外安装软件所摆放的目录。比如你安装一个ORACLE数据库则就可以放到这个目录下。默认是空的
+
+/usr/local
+这是另一个给主机额外安装软件所摆放的目录。一般是通过编译源码方式安装的程序
+
+/var
+这个目录中存放着在不断扩充着的东西，我们习惯将那些经常被修改的目录放在这个目录下,包括各种日志文件
+```
+
+
+
+# 编辑
+
+## vim
+
+### 一般模式
+
+```  shell
+# 快捷键
+# 快速删除一行
+$ dd 
+# 删除n行
+$ d2d
+# 撤销上一步
+$ u
+# 删除一个字母Delete
+$ x
+删除一个字母Backspace
+$ X
+# 复制光标当前行
+$ yy
+# 粘贴
+$ p
+# 删除一个词
+$ dw
+# 复制一个词
+$ yw
+# 移动到页尾
+$ shift + g
+# 移动到页头
+$ 数字1+shift+g
+# 移动到目标行
+$ 数字N+shift+g
+# 移动到行头
+$ shift+6
+# 移动到行尾
+$ shift+4
+
+
+
+yy2 - 复制当前行
+ - 
+切换到底行模式：按 :（冒号）；
+```
+
+### 编辑模式
+
+```shell
+# 在当前位置前插入 当前光标前
+$ i 
+
+# 在当前位置后插入 当前光标后
+$ a 
+
+# 在当前行之后插入一行 当前光标行的下一行
+$ o 
+
+# 删除当前字符并进入编辑
+$ s
+
+# 删除整行并进入编辑
+$ S
+
+# 进入替换模式
+$ R
+
+# 直接替换
+$ r
+```
+
+### 命令模式
+
+```  shell
+# 打开文件：	vim file
+# 保存并退出
+$ :wq	
+
+# 不保存退出
+$ esc
+$ :q!
+
+# 退出
+$ :q
+# 强制保存
+$ :!
+
+#批量替换
+$ :%s/old字符/new字符/g
+
+# n 查找下一个，N往上查找 N 查找下一个，n 往上查找
+$ /要查找的词
+
+# 显示行号 /关闭行号
+$ :set nu / :set nonu
+```
+
+### 解压压缩
+
+#### tar
+
+```shell
+tar命令位于/bin目录下，它能够将用户所指定的文件或目录打包成一个文件，但不做压缩。
+一般Linux上常用的压缩方式是选用tar将许多文件打包成一个文件，再以gzip压缩命令压缩成xxx.tar.gz(或称为xxx.tgz)的文件
+
+# 参数
+-c：创建一个新tar文件
+-v：显示运行过程的信息 
+-f：指定文件名 
+-z：调用gzip压缩命令进行压缩 
+-t：查看压缩文件的内容 
+-x：解开tar文件
+
+$ tar -zcvf xxx.tar.gz n1.txt
+
+# 打包
+tar –cvf xxx.tar ./*
+打包并且压缩：
+tar –zcvf xxx.tar.gz ./*  a  
+
+解压  -zxvf
+tar –xvf xxx.tar
+tar -xvf xxx.tar.gz -C /usr/aaa 解压到指定目录  注：C要大写
+```
+
+#### zip
+
+```shell
+# 压缩
+zip -r product_201803011531_bak.zip ./product
+
+# 解压 
+unzip -d  ./  压缩包.zip
+```
+
+### 
+
+### 开关机
+
+```
+reboot 重启命令
+halt   立刻关机 
+poweroff  立刻关机 
+shutdown -h now 立刻关机(root用户使用) 
+shutdown -h 10 10分钟后自动关机 
+```
+
+### 网络通讯命令
+
+```
+ifconfig  显示或设置网络设备。
+ifconfig  显示网络设备
+ifconfig eth0 up 启用eth0网卡
+ifconfig eth0 down  停用eth0网卡 ping   探测网络是否通畅。
+ping 192.168.0.1ifconfig
+```
+
+### 文件操作
+
+#### 上传
+
+```
+Alt + P
+图像化软件
+yum -y install lrzsz 打开窗口:rz 上传:rz
+```
+
+#### 删除
+
+```
+rm -rf ./xxx
+例：rm -rf  ./product
+
+rm
+rm  删除文件
+用法：rm [选项]... 文件...
+rm a.txt	删除a.txt文件
+删除需要用户确认，y/n rm 删除不询问
+rm -f a.txt	不询问，直接删除 rm 删除目录
+rm -r a		递归删除 不询问递归删除（慎用）
+rm -rf  a	不询问递归删除
+rm -rf *	删除所有文件
+rm -rf /*	自杀
+```
+
+#### cp(copy)功能
+
+复制文件或目录
+
+```
+语法：cp [参数][源文件或目录][目标文件或目录]
+ -r或--recursive 递归处理，将指定目录下的文件与子目录一并处理。
+cp 需要复制的文件 复制到哪里去
+  例如：cp -r test.txt test1 复制test.txt到子目录test1中去
+cp -r test.txt /test1 复制test.txt到根目录test1中去
+cp 需要复制的文件 复制到哪里去/改什么名字
+  例如：cp -r test.txt test1/hehe.txt 复制test.txt到子目录test1中,并改名为hehe.txt
+```
+
+#### mv(move) 功能
+
+移动或更名现有的文件或目录
+
+```
+mv 需要移动的文件 移动的位置
+例如：mv hehe.txt test 把hehe.txt移动到test子目录中
+	 mv a.txt b.txt		将a.txt文件重命名为b.txt
+	 mv a.txt ../		将a.txt文件移动到上一层目录中
+	 
+rm(remove) rm 功能：删除文件或目录。
+rm –rf 需要删除的文件/目录
+```
+
+#### find功能
+
+查找文件或目录
+
+```
+语法：find [目录...] [参数] 
+ -name 指定字符串作为寻找文件或目录的范本样式。
+find /root/ -name 'test*' 查看指定目录下面的满足条件的文件或目录
+```
+
+### 目录
+
+```
+cd app	切换到app目录 
+cd ..	切换到上一层目录 
+cd /	切换到系统根目录 
+cd ~	切换到用户主目录 
+cd -	切换到上一个所在目录
+clear 伪清屏命令
+man tar 查看命令说明
+	q 退出查看
+	Tab 自动补全
+```
+
+mkdir(make directory)命令可用来创建子目录
+
+```
+mkdir app	在当前目录下创建app目录
+mkdir –p app2/test	级联创建aap2以及test目
+
+rmdir(remove directory)命令可用来删除“空”的子目录
+
+rmdir app	删除app目录
+```
+
+### 文件大小
+
+友好显示文件大小
+
+```
+ll -h
+```
+
+### 
+
+
+
+### 浏览文件
+
+#### cat
+
+```
+cat 用于显示文件的内容。格式 cat[参数]<文件名>
+
+cat yum.conf  查看etc目录下的 services文件  
+more 一般用于要显示的内容会超过一个画面长度的情况。按空格键显示下一个画面。
+回车显示下一行内容。
+按 q 键退出查看。
+```
+
+#### more
+
+```
+more services
+空格显示下一页数据 回车显示下一行的数据 
+less 用法和more类似，不同的是less可以通过PgUp、PgDn键来控制。
+less services
+PgUp 和 PgDn 进行上下翻页.
+```
+
+#### less
+
+分页显示文件内容，操作更详细。
+
+```
+ 语法：less [参数] 文件
+    -m 显示类似more命令的百分比
+    -N 显示每行的行号
+   操作
+ 空格键：前进一页 或 page down
+ b：后退一页 或 page up
+ d：前进半页
+ u：后退半页
+ 回车键：前进一行 或方向键向下
+ y：后退一行 或 方向键向上
+ /字符串：向下搜索
+ 字符串：向上搜索
+ v：进入vim编辑器
+ 左右方向键：相当于水平滚动条
+ q：退出
+```
+
+#### tail
+
+tail命令是在实际使用过程中使用非常多的一个命令，它的功能是：用于显示文件后几行的内容。
+
+```
+用法:
+tail -10 /etc/passwd	查看后10行数据
+tail -f catalina.log	动态查看日志(*****)
+```
+
+### 历史指令
+
+history
+
+```shell
+# 记录之前操作过的一些指令，再也不用用箭头翻阅指令了
+# 检索历史命令
+history | grep yum 
+```
+
+### 修改时间
+
+```
+date -s "2018-07-18 15:00:00"
+```
+
+### 文件权限
+
+```
+chmod 命令
+chmod(change mode) 功能：变更文件或目录的权限。
+语法：chmod [参数] [<权限范围><符号><权限代号>]
+-R或--recursive 　递归处理，将指定目录下的所有文件及子目录一并处理。
+权限范围的表示法如下： 
+u：User，即文件或目录的拥有者。 
+g：Group，即文件或目录的所属群组。 
+o：Other，除了文件或目录拥有者或所属群组之外，其他用户皆属于这个范围。 
+a：All，即全部的用户，包含拥有者，所属群组以及其他用户。
+符号：
+
+- 添加权限
+  -取消权限
+  有关权限代号的部分，列表于下： 
+  r：读取权限，数字代号为"4"。 
+  w：写入权限，数字代号为"2"。 
+  x：执行或切换权限，数字代号为"1"。 
+  -：不具任何权限，数字代号为"0"。
+
+mkdir
+ll | grep xxx
+chmod u-rwx xxx
+chmod g-rwx xxx
+chmod 777xxx	添加权限
+chmod  531  a.tar    -r-x-wx--x
+```
+
+### 系统管理命令
+
+```
+ps 正在运行的某个进程的状态
+ps –ef  查看所有进程
+ps –ef | grep ssh 查找某一进程 kill 杀掉某一进程
+kill 2868  杀掉2868编号的进程
+kill -9 2868  强制杀死进程
+```
+
+### 管道
+
+```
+管道是Linux命令中重要的一个概念，其作用是将一个命令的输出用作另一个命令的输入。 示例
+ls --help | more  分页查询帮助信息
+ps –ef | grep java  查询名称中包含java的进程
+
+grep命令
+查找符合条件的字符串。
+用法: grep [选项]... PATTERN [FILE]... 
+
+grep lang anaconda-ks.cfg  在文件中查找lang
+grep lang anaconda-ks.cfg –color 高亮显示
+```
+
+
+
+## 查看软件配置信息
+
+whereis mysql
+
+## 
 
 ## 重置密码
 
@@ -244,341 +712,9 @@ net.ipv4.ip_forward=1
 systemctl restart network
 ```
 
-## 基础命令
 
-### 开关机
 
-```
-reboot 重启命令
-halt   立刻关机 
-poweroff  立刻关机 
-shutdown -h now 立刻关机(root用户使用) 
-shutdown -h 10 10分钟后自动关机 
-```
 
-### 网络通讯命令
-
-```
-ifconfig  显示或设置网络设备。
-ifconfig  显示网络设备
-ifconfig eth0 up 启用eth0网卡
-ifconfig eth0 down  停用eth0网卡 ping   探测网络是否通畅。
-ping 192.168.0.1ifconfig
-```
-
-### 文件操作
-
-#### 上传
-
-```
-Alt + P
-图像化软件
-yum -y install lrzsz 打开窗口:rz 上传:rz
-```
-
-#### 删除
-
-```
-rm -rf ./xxx
-例：rm -rf  ./product
-
-rm
-rm  删除文件
-用法：rm [选项]... 文件...
-rm a.txt	删除a.txt文件
-删除需要用户确认，y/n rm 删除不询问
-rm -f a.txt	不询问，直接删除 rm 删除目录
-rm -r a		递归删除 不询问递归删除（慎用）
-rm -rf  a	不询问递归删除
-rm -rf *	删除所有文件
-rm -rf /*	自杀
-```
-
-#### cp(copy)功能
-
-复制文件或目录
-
-```
-语法：cp [参数][源文件或目录][目标文件或目录]
- -r或--recursive 递归处理，将指定目录下的文件与子目录一并处理。
-cp 需要复制的文件 复制到哪里去
-  例如：cp -r test.txt test1 复制test.txt到子目录test1中去
-cp -r test.txt /test1 复制test.txt到根目录test1中去
-cp 需要复制的文件 复制到哪里去/改什么名字
-  例如：cp -r test.txt test1/hehe.txt 复制test.txt到子目录test1中,并改名为hehe.txt
-```
-
-#### mv(move) 功能
-
-移动或更名现有的文件或目录
-
-```
-mv 需要移动的文件 移动的位置
-例如：mv hehe.txt test 把hehe.txt移动到test子目录中
-	 mv a.txt b.txt		将a.txt文件重命名为b.txt
-	 mv a.txt ../		将a.txt文件移动到上一层目录中
-	 
-rm(remove) rm 功能：删除文件或目录。
-rm –rf 需要删除的文件/目录
-```
-
-#### find功能
-
-查找文件或目录
-
-```
-语法：find [目录...] [参数] 
- -name 指定字符串作为寻找文件或目录的范本样式。
-find /root/ -name 'test*' 查看指定目录下面的满足条件的文件或目录
-```
-
-### 目录
-
-```
-cd app	切换到app目录 
-cd ..	切换到上一层目录 
-cd /	切换到系统根目录 
-cd ~	切换到用户主目录 
-cd -	切换到上一个所在目录
-clear 伪清屏命令
-man tar 查看命令说明
-	q 退出查看
-	Tab 自动补全
-```
-
-mkdir(make directory)命令可用来创建子目录
-
-```
-mkdir app	在当前目录下创建app目录
-mkdir –p app2/test	级联创建aap2以及test目
-
-rmdir(remove directory)命令可用来删除“空”的子目录
-
-rmdir app	删除app目录
-```
-
-### 文件大小
-
-友好显示文件大小
-
-```
-ll -h
-```
-
-### 编辑
-
-#### vim
-
-```
-切换到插入模式：按 i 、o、a键；
-    i 在当前位置前插入
-    a 在当前位置后插入
-    o 在当前行之后插入一行
-快捷键：
-dd – 快速删除一行
-yy2 - 复制当前行
-p - 粘贴
-切换到底行模式：按 :（冒号）；
-```
-
-
-
-```
-打开文件：	vim file
-退出：esc	:q
-修改文件：	输入i进入插入模式
-保存并退出：esc	:wq
-
-不保存退出：esc	:q!
-```
-
-### 浏览文件
-
-#### cat
-
-```
-cat 用于显示文件的内容。格式 cat[参数]<文件名>
-
-cat yum.conf  查看etc目录下的 services文件  
-more 一般用于要显示的内容会超过一个画面长度的情况。按空格键显示下一个画面。
-回车显示下一行内容。
-按 q 键退出查看。
-```
-
-#### more
-
-```
-more services
-空格显示下一页数据 回车显示下一行的数据 
-less 用法和more类似，不同的是less可以通过PgUp、PgDn键来控制。
-less services
-PgUp 和 PgDn 进行上下翻页.
-```
-
-#### less
-
-分页显示文件内容，操作更详细。
-
-```
- 语法：less [参数] 文件
-    -m 显示类似more命令的百分比
-    -N 显示每行的行号
-   操作
- 空格键：前进一页 或 page down
- b：后退一页 或 page up
- d：前进半页
- u：后退半页
- 回车键：前进一行 或方向键向下
- y：后退一行 或 方向键向上
- /字符串：向下搜索
- 字符串：向上搜索
- v：进入vim编辑器
- 左右方向键：相当于水平滚动条
- q：退出
-```
-
-#### tail
-
-tail命令是在实际使用过程中使用非常多的一个命令，它的功能是：用于显示文件后几行的内容。
-
-```
-用法:
-tail -10 /etc/passwd	查看后10行数据
-tail -f catalina.log	动态查看日志(*****)
-```
-
-### 解压功能
-
-#### tar
-
-```
-tar命令位于/bin目录下，它能够将用户所指定的文件或目录打包成一个文件，但不做压缩。
-一般Linux上常用的压缩方式是选用tar将许多文件打包成一个文件，再以gzip压缩命令压缩成xxx.tar.gz(或称为xxx.tgz)的文件。  常用参数： 
--c：创建一个新tar文件 
--v：显示运行过程的信息 
--f：指定文件名 
--z：调用gzip压缩命令进行压缩 
--t：查看压缩文件的内容 
--x：解开tar文件
-```
-
-```
-打包：
-tar –cvf xxx.tar ./*
-打包并且压缩：
-tar –zcvf xxx.tar.gz ./*  a  
-
-解压  -zxvf
-tar –xvf xxx.tar
-tar -xvf xxx.tar.gz -C /usr/aaa 解压到指定目录  注：C要大写
-```
-
-#### zip
-
-```
-要备份的当前目录执行
-备份包
-zip -r product_201803011531_bak.zip ./product
-解压
-unzip -d   ./  压缩包.zip
-```
-
-### 历史指令
-
-history
-
-```shell
-# 记录之前操作过的一些指令，再也不用用箭头翻阅指令了
-# 检索历史命令
-history | grep yum 
-```
-
-### 修改时间
-
-```
-date -s "2018-07-18 15:00:00"
-```
-
-### 文件权限
-
-```
-chmod 命令
-chmod(change mode) 功能：变更文件或目录的权限。
-语法：chmod [参数] [<权限范围><符号><权限代号>]
--R或--recursive 　递归处理，将指定目录下的所有文件及子目录一并处理。
-权限范围的表示法如下： 
-u：User，即文件或目录的拥有者。 
-g：Group，即文件或目录的所属群组。 
-o：Other，除了文件或目录拥有者或所属群组之外，其他用户皆属于这个范围。 
-a：All，即全部的用户，包含拥有者，所属群组以及其他用户。
-符号：
-
-- 添加权限
-  -取消权限
-  有关权限代号的部分，列表于下： 
-  r：读取权限，数字代号为"4"。 
-  w：写入权限，数字代号为"2"。 
-  x：执行或切换权限，数字代号为"1"。 
-  -：不具任何权限，数字代号为"0"。
-
-mkdir
-ll | grep xxx
-chmod u-rwx xxx
-chmod g-rwx xxx
-chmod 777xxx	添加权限
-chmod  531  a.tar    -r-x-wx--x
-```
-
-### 系统管理命令
-
-```
-ps 正在运行的某个进程的状态
-ps –ef  查看所有进程
-ps –ef | grep ssh 查找某一进程 kill 杀掉某一进程
-kill 2868  杀掉2868编号的进程
-kill -9 2868  强制杀死进程
-```
-
-### 管道
-
-```
-管道是Linux命令中重要的一个概念，其作用是将一个命令的输出用作另一个命令的输入。 示例
-ls --help | more  分页查询帮助信息
-ps –ef | grep java  查询名称中包含java的进程
-
-grep命令
-查找符合条件的字符串。
-用法: grep [选项]... PATTERN [FILE]... 
-
-grep lang anaconda-ks.cfg  在文件中查找lang
-grep lang anaconda-ks.cfg –color 高亮显示
-```
-
-
-
-## 目录结构
-
-```
-	bin	binaries	存放二进制可执行文件
-	sbin	super user binaries 存放二进制可执行文件，只有root才能访问
-	etc	etcetera	存放系统配置文件
-	usr	unix shared resources 用于存放共享的系统资源
-	home	存放用户文件的目录
-	dev	devices	用于存放设备文件
-	lib	libary	存放跟文件系统中的程序运行所需要的共享库及内核模块
-	mnt	mount	系统管理员安装临时文件系统的安装点
-	boot	存放用于系统引导时使用的各种文件
-	tmp	temporary	用于存放各种临时文件
-	var 	variable	用于存放运行时需要改变数据的文件	
-/：根目录 一般根目录下只存放目录，不要存放文件
-
-root管理员的home（家）目录root
-其他用户的home（家）目录home目录中
-```
-
-## 查看软件配置信息
-
-whereis mysql
 
 # Linux扩容
 
@@ -757,3 +893,6 @@ gcc -static hello.c shname
 
 
 ./redis-cli --raw 编码中文(启动)
+
+
+
